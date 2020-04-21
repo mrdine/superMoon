@@ -6,6 +6,9 @@ exports.up = function(knex) {
         table.string('email').primary()
         table.string('senha').notNullable()
         table.string('categoria').notNullable()
+
+        table.string('senhaResetToken')
+        table.date('senhaResetExpires')
     })
 };
 

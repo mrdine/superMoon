@@ -8,6 +8,8 @@ module.exports = {
         
         estabelecimentos.forEach((est) => {
             est.senha = undefined
+            est.senhaResetToken = undefined
+            est.senhaResetExpires = undefined
         })
 
         return response.json(estabelecimentos)

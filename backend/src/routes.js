@@ -14,9 +14,11 @@ routes.get('/', (request, response) => {
 })
 
 routes.get('/estabelecimentos', EstController.index)
-routes.post('/cadastrarEstabelecimento', EstController.create)
+routes.post('/cadastrar_estabelecimento', EstController.create)
 
 routes.post('/login', SessionController.create)
+routes.post('/recuperar_senha', SessionController.recuperar)
+routes.post('/recuperar_senha/resetar_senha', SessionController.resetar)
 
 routes.get('/profile', authMiddleware, ProfileController.index)
 
