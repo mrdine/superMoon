@@ -4,9 +4,9 @@ exports.up = function(knex) {
         table.string('descricao')
         table.boolean('delivery')  
         table.string('imagens')
-        table.string('estabelecimento')
+        table.string('estabelecimento').notNullable()
 
-        table.foreign('estabelecimento').references('usuario').inTable('estabelecimentos')
+        table.foreign('estabelecimento').references('email').inTable('estabelecimentos')
     })
   };
   

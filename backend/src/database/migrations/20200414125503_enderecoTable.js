@@ -9,7 +9,7 @@ exports.up = function(knex) {
         table.string('complemento')
         table.string('estabelecimento')
 
-        table.foreign('estabelecimento').references('usuario').inTable('estabelecimentos')
+        table.foreign('estabelecimento').references('email').inTable('estabelecimentos')
     })
 };
 
