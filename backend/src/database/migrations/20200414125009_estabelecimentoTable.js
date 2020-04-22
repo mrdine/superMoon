@@ -5,6 +5,7 @@ exports.up = function(knex) {
         table.string('nome').notNullable()
         table.string('email').primary()
         table.string('senha').notNullable()
+        table.string('telefone')
         table.string('categoria').notNullable()
 
         table.string('senhaResetToken')

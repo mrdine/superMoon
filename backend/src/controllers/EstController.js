@@ -1,5 +1,8 @@
 const connection = require('../database/connection')
 const bcrypt = require('bcrypt')
+const fs = require('fs')
+const rimraf = require('rimraf')
+const assetsUtils = require('../../assets/assetsUtils')
 
 module.exports = {
 
@@ -16,7 +19,7 @@ module.exports = {
     },
 
     async create(request, response) {
-        const { apelido, senha, senha2, nome, categoria, email, uf, cidade, bairro, rua, numero, complemento } = request.body
+        const { apelido, senha, senha2, nome, telefone, categoria, email, uf, cidade, bairro, rua, numero, complemento } = request.body
 
         // verificar se email já nao foi cadastrado antes
         let est = await connection('estabelecimentos').where('email', email)
@@ -43,10 +46,22 @@ module.exports = {
                 await connection('estabelecimentos').insert({
                     apelido,
                     nome,
+                    telefone,
                     senha: senhaEncriptada,
                     email,
                     categoria
                 })
+
+                // criar pasta para guardar imagens
+                const dir = assetsUtils.assetsDir + `/estabelecimentos/${apelido}`
+                if (!fs.existsSync()) {
+                    try {
+                        fs.mkdirSync(dir)
+                    } catch (error) {
+                        console.log('Erro ao criar pasta do estabelecimento', error)
+                    }
+                    
+                }
 
             })
 
@@ -69,5 +84,43 @@ module.exports = {
 
 
 
+    },
+
+    async delete(request, response) {
+        const email = request.estEmail
+        if(!email) {
+            return response.status(401).json({ error: 'Tem que estar logado para deletar uma conta' }) // 401: Não autorizado
+        }
+
+        const estabelecimentos = await connection('estabelecimentos')
+        .select('apelido')
+        .where('email', email)
+        const est = estabelecimentos[0]
+        const apelido = est.apelido
+
+        try {
+            await connection('estabelecimentos')
+                .where('email', email)
+                .del()
+
+           
+        } catch (error) {
+            console.log(error)
+            return response.status(401).json({ error: 'Não foi possivel deletar, tente novamente' }) // 401: Não autorizado
+        }
+
+        const dir = assetsUtils.assetsDir + `/estabelecimentos/${apelido}`
+
+        try {
+             // deletar pasta criada daquele estabelecimento
+            rimraf(dir, function () {
+                console.log(`pasta '${dir}' deletada`)
+            })
+
+             response.send()
+        } catch (error) {
+            console.log(`Não foi possivel deletar pasta '${dir}' \n`, error)
+            response.send()
+        }
     }
 }
