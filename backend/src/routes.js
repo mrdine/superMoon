@@ -6,6 +6,7 @@ const ProfileController = require('./controllers/ProfileController')
 const authMiddleware = require('./middlewares/auth')
 const NewsController = require('./controllers/NewsController')
 
+const views = require('./views/views')
 
 const routes = express.Router()
 
@@ -26,6 +27,8 @@ routes.get('/profile/editar', authMiddleware, ProfileController.indexEditar)
 // tenho que usar o get acima para colocar os values no form no react
 routes.post('/profile/editar', authMiddleware, ProfileController.editar)
 routes.post('/profile/editar_perfil_image', authMiddleware, ProfileController.editarImagePerfil)
+routes.post('/profile/adicionar_fotos', authMiddleware , ProfileController.adicionarFotos)
+
 
 
 routes.post('/profile/news', authMiddleware, NewsController.create)

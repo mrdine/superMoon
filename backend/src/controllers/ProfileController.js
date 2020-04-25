@@ -140,14 +140,14 @@ module.exports = {
                                 return response.status(401).send({ error: 'Erro, tente novamente' })
                             }
                         })
-                        
+
                         try {
                             // primeiro ver se já nao tem imagem de perfil
                             const imagens = await connection('imagens').select('perfil').where({
                                 estabelecimento: email,
                                 perfil: true
                             })
-                            if(imagens.length > 0){
+                            if (imagens.length > 0) {
                                 await connection('imagens').where({
                                     estabelecimento: email,
                                     perfil: true
@@ -167,7 +167,7 @@ module.exports = {
                             console.log(error, 'Erro ao inserir imagem')
                             return response.status(401).send({ error: 'Tente novamente' })
                         }
-                        
+
                         // Agora testar recuperar imagem do bd
                         /*
                         const imagess = await connection('imagens').select('imagem').where({
@@ -191,7 +191,115 @@ module.exports = {
         }
 
 
-    }
+    },
 
     // DEVE TER UMA FUNÇÃO/ROTA SÓ PARA INSERIR E PARA DELETAR IMAGENS
+    async adicionarFotos(request, response) {
+        const email = request.estEmail
+
+
+        const form = formidable({
+            multiples: true,
+            uploadDir: `${assetsUtils.assetsDir}/temp/imagesUploaded`
+        })
+
+        try {
+            form.parse(request, async function (err, fields, files) {
+                const arquivos = files.files
+                // se for mais que uma imagem
+                if (arquivos.name === undefined) {
+                    //console.log('é array')
+                    arquivos.forEach(async (arquivo) => {
+                        // verificar se arquivo é uma imagem
+                        const fileNome = arquivo.name
+
+                        const parts = fileNome.split('.')
+                        if (!parts.length === 2) {
+                            return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
+                        }
+
+                        const [nome, extensao] = parts
+                        if (extensao === 'png' || extensao === 'jpg') {
+                            // renomear imagem
+                            let now = Date.now()
+                            let randomN = randomNumber.getRandomInt(0, 7777)
+                            let newName = `${now}${randomN}.png`
+
+                            const filepath = arquivo.path
+                            const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
+                            fs.rename(filepath, newpath, (err) => {
+                                if (err) {
+                                    console.log(err, 'erro ao renomear arquivo')
+                                    return response.status(401).send({ error: 'Erro, tente novamente' })
+                                }
+                            })
+
+                            // adicionar imagem no bd
+                            const binaryFile = fileConverter.base64_encode(newName)
+                            await connection('imagens').insert({
+                                perfil: false,
+                                imagem: binaryFile,
+                                estabelecimento: email
+                            })
+                            // excluir imagem da past temp
+                            fs.unlinkSync(newpath)
+
+                        } else {
+                            return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
+                        }
+
+                            
+
+
+
+                    })
+                }
+                // se for só uma imagem
+                else {
+                    // verificar se arquivo é uma imagem
+                    const fileNome = arquivos.name
+
+                    const parts = fileNome.split('.')
+                    if (!parts.length === 2) {
+                        return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
+                    }
+
+                    const [nome, extensao] = parts
+                        if (extensao === 'png' || extensao === 'jpg') {
+                            // renomear imagem
+                            let now = Date.now()
+                            let randomN = randomNumber.getRandomInt(0, 7777)
+                            let newName = `${now}${randomN}.png`
+
+                            const filepath = arquivos.path
+                            const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
+                            fs.rename(filepath, newpath, (err) => {
+                                if (err) {
+                                    console.log(err, 'erro ao renomear arquivo')
+                                    return response.status(401).send({ error: 'Erro, tente novamente' })
+                                }
+                            })
+                            // adicionar imagem no bd
+                            const binaryFile = fileConverter.base64_encode(newName)
+                            await connection('imagens').insert({
+                                perfil: false,
+                                imagem: binaryFile,
+                                estabelecimento: email
+                            })
+                            // excluir imagem da past temp
+                            fs.unlinkSync(newpath)
+                        } else {
+                            return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
+                        }
+
+                }
+            })
+        } catch (error) {
+            console.log(error, 'Erro ao tentar pegar arquivos enviados')
+            response.status(401).send({ erro: 'Erro, tente novamente' })
+        }
+
+        response.send()
+
+    },
 }
