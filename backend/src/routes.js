@@ -10,13 +10,13 @@ const views = require('./views/views')
 
 const routes = express.Router()
 
-routes.get('/', (request, response) => {
-    
-})
+
+// pagina de um perfil '/?apelido=bla'
+routes.get('/profile/', ProfileController.indexProfile)
 
 routes.get('/estabelecimentos', EstController.index)
 routes.post('/cadastrar_estabelecimento', EstController.create)
-routes.post('/excluir_estabelecimento', authMiddleware, EstController.delete)
+routes.delete('/excluir_estabelecimento', authMiddleware, EstController.delete)
 
 routes.post('/login', SessionController.create)
 routes.post('/recuperar_senha', SessionController.recuperar)
@@ -28,7 +28,7 @@ routes.get('/profile/editar', authMiddleware, ProfileController.indexEditar)
 routes.post('/profile/editar', authMiddleware, ProfileController.editar)
 routes.post('/profile/editar_perfil_image', authMiddleware, ProfileController.editarImagePerfil)
 routes.post('/profile/adicionar_fotos', authMiddleware , ProfileController.adicionarFotos)
-
+routes.delete('/profile/deletar_foto/:id', authMiddleware, ProfileController.deletarFoto)
 
 
 routes.post('/profile/news', authMiddleware, NewsController.create)

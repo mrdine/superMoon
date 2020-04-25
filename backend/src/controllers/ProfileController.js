@@ -8,30 +8,69 @@ const fileConverter = require('../utils/FileConverter')
 
 module.exports = {
     async index(request, response) {
-        const estabelecimento = {}
-        estabelecimento.email = request.estEmail
+        const email = request.estEmail
 
-        const estabelecimentos = await connection('estabelecimentos')
+        const estabelecimento = await connection('estabelecimentos')
             .select('nome', 'apelido', 'email', 'telefone', 'categoria')
-            .where('email', estabelecimento.email)
-        estabelecimento.myEstabelecimento = estabelecimentos[0]
+            .where('email', email)
+            .first()
 
-        const enderecos = await connection('enderecos')
+        estabelecimento.myEndereco = await connection('enderecos')
+            .select('uf', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
+            .where('estabelecimento', email)
+            .first()
+
+        estabelecimento.myPerfil = await connection('perfis')
+            .select('descricao', 'delivery')
+            .where('estabelecimento', email)
+            .first()
+
+        estabelecimento.myImages = await connection('imagens')
+            .select('id', 'imagem', 'perfil')
+            .where('estabelecimento', email)
+
+        estabelecimento.myNews = await connection('news')
+            .select('titulo', 'data', 'conteudo')
+            .where('estabelecimento', email)
+
+
+        response.send(estabelecimento)
+    },
+
+    // Quando alguem visita a pagina de perfil
+    async indexProfile(request, response) {
+        const apelido = request.query.apelido
+        const estabelecimento = await connection('estabelecimentos')
+            .select('nome', 'apelido', 'email', 'telefone', 'categoria')
+            .where('apelido', apelido)
+            .first()
+
+        if(estabelecimento === undefined) {
+            response.status(404).send({message: 'Esse perfil não existe'})
+        } 
+        else {
+            estabelecimento.myEndereco = await connection('enderecos')
             .select('uf', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
             .where('estabelecimento', estabelecimento.email)
-        estabelecimento.myEndereco = enderecos[0]
+            .first()
 
-        const perfis = await connection('perfis')
-            .select('descricao', 'delivery', 'imagens')
+        estabelecimento.myPerfil = await connection('perfis')
+            .select('descricao', 'delivery')
             .where('estabelecimento', estabelecimento.email)
-        estabelecimento.myPerfil = perfis[0]
+            .first()
+
+        estabelecimento.myImages = await connection('imagens')
+            .select('id', 'imagem', 'perfil')
+            .where('estabelecimento', estabelecimento.email)
 
         estabelecimento.myNews = await connection('news')
             .select('titulo', 'data', 'conteudo')
             .where('estabelecimento', estabelecimento.email)
 
-
         response.send(estabelecimento)
+        } 
+            
+        
     },
 
     async indexEditar(request, response) {
@@ -248,7 +287,7 @@ module.exports = {
                             return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
                         }
 
-                            
+
 
 
 
@@ -265,32 +304,32 @@ module.exports = {
                     }
 
                     const [nome, extensao] = parts
-                        if (extensao === 'png' || extensao === 'jpg') {
-                            // renomear imagem
-                            let now = Date.now()
-                            let randomN = randomNumber.getRandomInt(0, 7777)
-                            let newName = `${now}${randomN}.png`
+                    if (extensao === 'png' || extensao === 'jpg') {
+                        // renomear imagem
+                        let now = Date.now()
+                        let randomN = randomNumber.getRandomInt(0, 7777)
+                        let newName = `${now}${randomN}.png`
 
-                            const filepath = arquivos.path
-                            const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-                            fs.rename(filepath, newpath, (err) => {
-                                if (err) {
-                                    console.log(err, 'erro ao renomear arquivo')
-                                    return response.status(401).send({ error: 'Erro, tente novamente' })
-                                }
-                            })
-                            // adicionar imagem no bd
-                            const binaryFile = fileConverter.base64_encode(newName)
-                            await connection('imagens').insert({
-                                perfil: false,
-                                imagem: binaryFile,
-                                estabelecimento: email
-                            })
-                            // excluir imagem da past temp
-                            fs.unlinkSync(newpath)
-                        } else {
-                            return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
-                        }
+                        const filepath = arquivos.path
+                        const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
+                        fs.rename(filepath, newpath, (err) => {
+                            if (err) {
+                                console.log(err, 'erro ao renomear arquivo')
+                                return response.status(401).send({ error: 'Erro, tente novamente' })
+                            }
+                        })
+                        // adicionar imagem no bd
+                        const binaryFile = fileConverter.base64_encode(newName)
+                        await connection('imagens').insert({
+                            perfil: false,
+                            imagem: binaryFile,
+                            estabelecimento: email
+                        })
+                        // excluir imagem da past temp
+                        fs.unlinkSync(newpath)
+                    } else {
+                        return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
+                    }
 
                 }
             })
@@ -302,4 +341,22 @@ module.exports = {
         response.send()
 
     },
+
+    async deletarFoto(request, response) {
+        const id = request.params.id
+        const email = request.estEmail
+
+        const image = await connection('imagens').where({ id: id, estabelecimento: email }).select('id', 'estabelecimento').first()
+
+        if (image.estabelecimento === email) {
+            await connection('imagens').where('id', id).delete()
+
+            return response.send({ message: 'success' }) // 204: No content
+        }
+
+        return response.status(401).json({ error: 'Operation not permited' }) // 401: Não autorizado
+
+
+
+    }
 }
