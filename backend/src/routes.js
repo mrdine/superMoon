@@ -22,7 +22,7 @@ routes.post('/login', SessionController.create)
 routes.post('/recuperar_senha', SessionController.recuperar)
 routes.post('/recuperar_senha/resetar_senha', SessionController.resetar)
 
-routes.get('/profile', authMiddleware, ProfileController.index)
+routes.get('/my_profile', authMiddleware, ProfileController.index)
 routes.get('/profile/editar', authMiddleware, ProfileController.indexEditar)
 // tenho que usar o get acima para colocar os values no form no react
 routes.post('/profile/editar', authMiddleware, ProfileController.editar)
