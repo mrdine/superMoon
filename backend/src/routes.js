@@ -25,6 +25,8 @@ routes.get('/profile', authMiddleware, ProfileController.index)
 routes.get('/profile/editar', authMiddleware, ProfileController.indexEditar)
 // tenho que usar o get acima para colocar os values no form no react
 routes.post('/profile/editar', authMiddleware, ProfileController.editar)
+routes.post('/profile/editar_perfil_image', authMiddleware, ProfileController.editarImagePerfil)
+
 
 routes.post('/profile/news', authMiddleware, NewsController.create)
 

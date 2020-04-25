@@ -52,6 +52,7 @@ module.exports = {
                     categoria
                 })
 
+                /*
                 // criar pasta para guardar imagens
                 const dir = assetsUtils.assetsDir + `/estabelecimentos/${apelido}`
                 if (!fs.existsSync()) {
@@ -62,6 +63,7 @@ module.exports = {
                     }
                     
                 }
+                */
 
             })
 
@@ -102,13 +104,15 @@ module.exports = {
             await connection('estabelecimentos')
                 .where('email', email)
                 .del()
+            response.send()
+            
 
            
         } catch (error) {
             console.log(error)
             return response.status(401).json({ error: 'Não foi possivel deletar, tente novamente' }) // 401: Não autorizado
         }
-
+        /*
         const dir = assetsUtils.assetsDir + `/estabelecimentos/${apelido}`
 
         try {
@@ -122,5 +126,6 @@ module.exports = {
             console.log(`Não foi possivel deletar pasta '${dir}' \n`, error)
             response.send()
         }
+        */
     }
 }
