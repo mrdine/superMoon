@@ -39,7 +39,10 @@ module.exports = {
 
     // Quando alguem visita a pagina de perfil
     async indexProfile(request, response) {
-        const apelido = request.query.apelido
+        let apelido = request.query.apelido
+        if (!apelido) {
+            apelido = request.params.apelido
+        }
         const estabelecimento = await connection('estabelecimentos')
             .select('nome', 'apelido', 'email', 'telefone', 'categoria')
             .where('apelido', apelido)
