@@ -8,7 +8,7 @@ module.exports = {
 
     async index(request, response) {
         const estabelecimentos = await connection('estabelecimentos').select('*')
-        
+
         estabelecimentos.forEach((est) => {
             est.senha = undefined
             est.senhaResetToken = undefined
@@ -16,6 +16,61 @@ module.exports = {
         })
 
         return response.json(estabelecimentos)
+    },
+
+    async estPertos(request, response) {
+        const { uf, cidade, categoria, nome } = request.body
+        const estData = {}
+        const endData = {}
+
+        if (uf) {
+            endData['uf'] = uf
+        }
+        if (cidade) {
+            endData['cidade'] = cidade
+        }
+        if (categoria) {
+            estData['categoria'] = categoria
+        }
+        if (nome) {
+            estData['nome'] = nome
+        }
+
+        if (!uf && !cidade && !categoria && !nome) {
+            return response.status(401).json({ error: 'Insira ao menos um campo antes de pesquisar' }) // 401: Não autorizado
+        }
+
+        try {
+
+            if (endData.uf || endData.cidade) {
+                const estabelecimentos = []
+
+                const enderecos = await connection('enderecos').select('uf', 'cidade', 'estabelecimento').where(endData)
+                await enderecos.forEach(async (endereco, index) => {
+                    estData.email = endereco.estabelecimento
+
+                    estabelecimentos[index] = await connection('estabelecimentos').select('nome').where(estData).first()
+                    if (index === enderecos.length - 1) {
+                        const ests = estabelecimentos.filter(est => {
+                            return !(est === null || est === undefined)
+                        })
+                        return response.json(ests)
+
+                    }
+                })
+
+            } else {
+                const estabelecimentos = await connection('estabelecimentos')
+                    .select('nome')
+                    .where(estData)
+                return response.json(estabelecimentos)
+
+            }
+
+
+        } catch (error) {
+            console.log(error, 'Erro ao buscar estabelecimentos, tente novamente')
+        }
     },
 
     async create(request, response) {
@@ -35,7 +90,7 @@ module.exports = {
             return response.status(401).json({ error: 'Uma conta com este apelido já foi criada' }) // 401: Não autorizado
         }
 
-        if ( senha !== senha2) {
+        if (senha !== senha2) {
             return response.status(401).json({ error: 'As senhas não conferem' }) // 401: Não autorizado
         }
 
@@ -90,13 +145,13 @@ module.exports = {
 
     async delete(request, response) {
         const email = request.estEmail
-        if(!email) {
+        if (!email) {
             return response.status(401).json({ error: 'Tem que estar logado para deletar uma conta' }) // 401: Não autorizado
         }
 
         const estabelecimentos = await connection('estabelecimentos')
-        .select('apelido')
-        .where('email', email)
+            .select('apelido')
+            .where('email', email)
         const est = estabelecimentos[0]
         const apelido = est.apelido
 
@@ -105,9 +160,9 @@ module.exports = {
                 .where('email', email)
                 .del()
             response.send()
-            
 
-           
+
+
         } catch (error) {
             console.log(error)
             return response.status(401).json({ error: 'Não foi possivel deletar, tente novamente' }) // 401: Não autorizado

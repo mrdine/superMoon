@@ -4,6 +4,7 @@ import { FiLogIn } from 'react-icons/fi'
 
 import api from '../../services/api'
 
+import consertarValor from '../../utils/consertarValor'
 import Headers from '../../utils/components/header'
 
 // basta importar o css que já se aplica
@@ -17,37 +18,51 @@ export default function Inicial() {
     // devo trocar o uf para minusculo depois
     const [uf, setUF] = useState('')
     const [cidade, setCidade] = useState('')
+    const history = useHistory()
 
     function firstLetterUpper(text, separator = ' ') {
-        if(text === '') {
+        if (text === '') {
             return ''
-        } 
+        }
         try {
             return text
-            .split(separator)
-            .map(function(word) { 
-                if(word === 'de' || word === 'da' || word === 'do' || word === 'das' || word === 'dos') {
-                   return word.toLowerCase()
-                }
-                return word[0].toUpperCase() + word.slice(1).toLowerCase()
-            })
-            .join(separator)
+                .split(separator)
+                .map(function (word) {
+                    if (word === 'de' || word === 'da' || word === 'do' || word === 'das' || word === 'dos') {
+                        return word.toLowerCase()
+                    }
+                    return word[0].toUpperCase() + word.slice(1).toLowerCase()
+                })
+                .join(separator)
         } catch (error) {
-            
+
         }
-        
+
     }
 
     function maisculas(value) {
         return value.toUpperCase()
     }
-    // fazer uma função dessa global
-    function tirareEspacos(value) {
-        let cidade = value.toLowerCase()
 
-    }
     async function handleBusca(e) {
         e.preventDefault()
+
+        if (!uf || !cidade) {
+            alert('Insira a UF e a Cidade para pesquisar')
+        }
+        else {
+            // usar consertar valor antes de chamar api
+            const data = {
+                uf: consertarValor(uf),
+                cidade: consertarValor(cidade)
+            }
+            localStorage.setItem('uf', data.uf)
+            localStorage.setItem('cidade', data.cidade)
+
+            history.push('/busca')
+        }
+
+
     }
 
     return (
