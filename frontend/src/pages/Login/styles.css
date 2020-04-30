@@ -1,0 +1,101 @@
+
+
+
+
+.rocket {
+    margin-left: 50px;
+    margin-top: 80px;
+    width: 50%;
+}
+
+.loginContainer {
+    position: relative;
+    margin-top: 120px;
+    margin-right: 250px;
+    height: 100%;
+    width: 30%;
+    float: right;
+    border: solid 2px white;
+    border-radius: 15px;
+    padding: 150px;
+    background-color: white;
+    align-items: center;
+    margin-bottom: 20px;
+
+    box-sizing: content-box;
+}
+
+
+
+.emailInput {
+    margin-top: 100px;
+    width: 100%;
+    display: inline-block;
+    border: 2px solid #dcdce6;
+    background-color: rgb(247, 244, 244);
+
+}
+
+.senhaInput {
+    margin-top: 10px;
+    width: 100%;
+    border: 2px solid #dcdce6;
+    background-color: rgb(247, 244, 244);
+
+}
+
+.button {
+    margin-top: 50px;
+}
+h1 {
+    text-align: center;
+    margin-top: 10%;
+
+}
+
+.linkCadastro {
+    text-decoration: none;
+}
+
+@media(max-width: 1025px) {
+    h1 {
+        margin-bottom: 20px;
+    }
+    .rocket {
+        width: 70%;
+    }
+    .loginContainer {
+        height: auto;
+        width: 80%;
+        float: none;
+        margin: auto;
+        text-align: center;
+        padding: 10px;
+    }
+    .button {
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    input {
+        margin-bottom: 0px;
+    }
+}
+
+@media(min-width:1026px) {
+    .loginContainer {
+        display: inline-block;
+        margin-top: 100px;
+        margin-left: 80px;
+        margin-right: 150px;
+        height: 37vw;
+        width: 30%;
+        padding: 30px;
+    }
+    .rocket {
+        align-items: center;
+        width: 35%;
+        margin-top: 100px;
+    }
+}
