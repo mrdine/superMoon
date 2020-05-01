@@ -17,6 +17,11 @@ routes.get('/:apelido', ProfileController.indexProfile)
 routes.get('/buscar/estabelecimentos', EstController.index)
 routes.get('/buscar/estabelecimentos_pertos', EstController.estPertos)
 
+//buscar est por email
+routes.post('/buscar/estabelecimentoEmail', EstController.estEmail)
+// buscar est por apelido
+routes.post('/buscar/estabelecimentoApelido', EstController.estApelido)
+
 routes.post('/cadastrar_estabelecimento', EstController.create)
 routes.delete('/excluir_estabelecimento', authMiddleware, EstController.delete)
 

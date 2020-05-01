@@ -6,6 +6,22 @@ const assetsUtils = require('../../assets/assetsUtils')
 
 module.exports = {
 
+    async estEmail(request, response) {
+
+        const { email } = request.body
+        const est = await connection('estabelecimentos').select('nome').where('email', email).first()
+        return response.send({est})
+
+
+    },
+
+    async estApelido(request, response) {
+        const { apelido } = request.body
+        const est = await connection('estabelecimentos').select('nome').where('apelido', apelido).first()
+        return response.send({est})
+
+    },
+
     async index(request, response) {
         const estabelecimentos = await connection('estabelecimentos').select('*')
 
@@ -137,7 +153,7 @@ module.exports = {
             estabelecimento: email
         })
 
-        return response.json({ nome })
+        return response.send({ nome, apelido })
 
 
 

@@ -78,7 +78,7 @@ export default function Inicial() {
                         placeholder="UF"
                         value={maisculas(uf)}
                         maxLength='2'
-                        onChange={e => setUF(e.target.value.toLowerCase())}></input>
+                        onChange={e => setUF(e.target.value.toUpperCase())}></input>
                     <input className='cidadeInput'
                         placeholder="Cidade"
                         value={firstLetterUpper(cidade)}
