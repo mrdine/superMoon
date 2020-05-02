@@ -5,6 +5,7 @@ const assetsUtils = require('../../assets/assetsUtils')
 const fs = require('fs')
 const randomNumber = require('../utils/RandomNumber')
 const fileConverter = require('../utils/FileConverter')
+const resizeImage = require('../utils/ResizeImage')
 
 module.exports = {
     async index(request, response) {
@@ -48,32 +49,32 @@ module.exports = {
             .where('apelido', apelido)
             .first()
 
-        if(estabelecimento === undefined) {
-            response.status(404).send({message: 'Esse perfil não existe'})
-        } 
+        if (estabelecimento === undefined) {
+            response.status(404).send({ message: 'Esse perfil não existe' })
+        }
         else {
             estabelecimento.myEndereco = await connection('enderecos')
-            .select('uf', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
-            .where('estabelecimento', estabelecimento.email)
-            .first()
+                .select('uf', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
+                .where('estabelecimento', estabelecimento.email)
+                .first()
 
-        estabelecimento.myPerfil = await connection('perfis')
-            .select('descricao', 'delivery')
-            .where('estabelecimento', estabelecimento.email)
-            .first()
+            estabelecimento.myPerfil = await connection('perfis')
+                .select('descricao', 'delivery')
+                .where('estabelecimento', estabelecimento.email)
+                .first()
 
-        estabelecimento.myImages = await connection('imagens')
-            .select('id', 'imagem', 'perfil')
-            .where('estabelecimento', estabelecimento.email)
+            estabelecimento.myImages = await connection('imagens')
+                .select('id', 'imagem', 'perfil')
+                .where('estabelecimento', estabelecimento.email)
 
-        estabelecimento.myNews = await connection('news')
-            .select('titulo', 'data', 'conteudo')
-            .where('estabelecimento', estabelecimento.email)
+            estabelecimento.myNews = await connection('news')
+                .select('titulo', 'data', 'conteudo')
+                .where('estabelecimento', estabelecimento.email)
 
-        response.send(estabelecimento)
-        } 
-            
-        
+            response.send(estabelecimento)
+        }
+
+
     },
 
     async indexEditar(request, response) {
@@ -163,7 +164,6 @@ module.exports = {
         try {
             form.parse(request, async function (err, fields, files) {
                 if (files) {
-                    console.log('arquivo recebido')
                     // se for foto
                     const fileName = files.imagePerfil.name
                     const parts = fileName.split('.')
@@ -175,15 +175,26 @@ module.exports = {
                     if (extensao === 'png' || extensao === 'jpg') {
                         // renomear foto antes de enviar pro bd
                         const filepath = files.imagePerfil.path
+                        const pathProvisorio = `${assetsUtils.assetsDir}/temp/imagesUploaded/resize${newName}`
                         const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-                        fs.rename(filepath, newpath, (err) => {
+
+                        await fs.rename(filepath, newpath, (err) => {
                             if (err) {
                                 console.log(err, 'erro ao renomear arquivo')
                                 return response.status(401).send({ error: 'Erro, tente novamente' })
                             }
+                            try {
+                                resizeImage(newpath, newpath)
+                                
+                            } catch (error) {
+                                console.log('Erro ao redimensionar imagem', error)
+                            }
                         })
+                        
+
 
                         try {
+
                             // primeiro ver se já nao tem imagem de perfil
                             const imagens = await connection('imagens').select('perfil').where({
                                 estabelecimento: email,
@@ -196,20 +207,25 @@ module.exports = {
                                 }).update('perfil', false)
                             }
                             // adicionar imagem no bd
-                            const binaryFile = fileConverter.base64_encode(newName)
+                            const binaryFile = await fileConverter.base64_encode(newName)
                             await connection('imagens').insert({
                                 perfil: true,
                                 imagem: binaryFile,
                                 estabelecimento: email
                             })
-                            // excluir imagem da past temp
-                            fs.unlinkSync(newpath)
+
+
+
 
                         } catch (error) {
                             console.log(error, 'Erro ao inserir imagem')
                             return response.status(401).send({ error: 'Tente novamente' })
                         }
 
+                        // excluir imagem da past temp
+                        // excluir imagem não redimensionada
+                        //fs.unlinkSync(pathProvisorio)
+                        fs.unlinkSync(newpath)
                         // Agora testar recuperar imagem do bd
                         /*
                         const imagess = await connection('imagens').select('imagem').where({
@@ -275,6 +291,9 @@ module.exports = {
                                     return response.status(401).send({ error: 'Erro, tente novamente' })
                                 }
                             })
+                            // redimensionar imagem para 480x270
+                            //await resizeImage([newpath], 480, 270)
+                            resizeImage.resizeImage2(newpath)
 
                             // adicionar imagem no bd
                             const binaryFile = fileConverter.base64_encode(newName)
@@ -321,6 +340,9 @@ module.exports = {
                                 return response.status(401).send({ error: 'Erro, tente novamente' })
                             }
                         })
+
+
+
                         // adicionar imagem no bd
                         const binaryFile = fileConverter.base64_encode(newName)
                         await connection('imagens').insert({
@@ -360,6 +382,14 @@ module.exports = {
         return response.status(401).json({ error: 'Operation not permited' }) // 401: Não autorizado
 
 
+
+    },
+
+    async getFoto(request, response) {
+        const email = request.estEmail
+        const binary = await connection('imagens').where({ estabelecimento: email, perfil: true }).select('imagem', 'perfil').first()
+        fileConverter.base64_decode(binary.imagem, 'redimensonado.png')
+        return response.send('oi')
 
     }
 }

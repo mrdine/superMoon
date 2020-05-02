@@ -1,6 +1,8 @@
 
 module.exports = {
 
+    
+
     firstLetterUpper(text, separator = ' ') {
         if (text === '') {
             return ''

@@ -10,7 +10,7 @@ module.exports = {
 
         const { email } = request.body
         const est = await connection('estabelecimentos').select('nome').where('email', email).first()
-        return response.send({est})
+        return response.send({ est })
 
 
     },
@@ -18,7 +18,7 @@ module.exports = {
     async estApelido(request, response) {
         const { apelido } = request.body
         const est = await connection('estabelecimentos').select('nome').where('apelido', apelido).first()
-        return response.send({est})
+        return response.send({ est })
 
     },
 
@@ -55,34 +55,39 @@ module.exports = {
         if (!uf && !cidade && !categoria && !nome) {
             return response.status(401).json({ error: 'Insira ao menos um campo antes de pesquisar' }) // 401: Não autorizado
         }
-
         try {
 
             if (endData.uf || endData.cidade) {
                 const estabelecimentos = []
 
                 const enderecos = await connection('enderecos').select('uf', 'cidade', 'estabelecimento').where(endData)
+                if(enderecos.length === 0) {
+                    return response.send([])
+                }
                 await enderecos.forEach(async (endereco, index) => {
                     estData.email = endereco.estabelecimento
 
-                    estabelecimentos[index] = await connection('estabelecimentos').select('nome').where(estData).first()
+                    estabelecimentos[index] = await connection('estabelecimentos').select('nome','apelido').where(estData).first()
+                    estabelecimentos[index].imagem = await connection('imagens').select('imagem').where({estabelecimento: estData.email, perfil: true}).first()
                     if (index === enderecos.length - 1) {
                         const ests = estabelecimentos.filter(est => {
                             return !(est === null || est === undefined)
                         })
-                        return response.json(ests)
+                        return response.send(ests)
 
                     }
                 })
 
             } else {
                 const estabelecimentos = await connection('estabelecimentos')
-                    .select('nome')
+                    .select('nome','apelido', 'email')
                     .where(estData)
-                return response.json(estabelecimentos)
+                estabelecimentos.forEach(async (est) => {
+                    est.imagem = await connection('imagens').select('image').where({estabelecimento: est.email, perfil: true}).first()
+                })
+                return response.send(estabelecimentos)
 
             }
-
 
         } catch (error) {
             console.log(error, 'Erro ao buscar estabelecimentos, tente novamente')

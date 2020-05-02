@@ -9,6 +9,12 @@ import './styles.css'
 
 
 const Headers = props => {
+
+  const handleSair = () =>{
+    localStorage.removeItem('token')
+  }
+
+
   const tipo = props.tipo
 
   if (tipo === 'inicial') {
@@ -49,14 +55,15 @@ const Headers = props => {
         </Link>
         <aside>
           <nav className='menu'>
+            
             <ul>
               <li>
-                <Link className='link' to='/perfil'>
+                <Link className='link' to='/meu_perfil'>
                   <p>Meu Perfil</p>
                 </Link>
               </li>
               <li>
-                <Link className='link' to='/login'>
+                <Link onClick={handleSair} className='link' to='/login'>
                   <p>Sair</p>
                 </Link>
               </li>

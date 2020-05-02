@@ -4,7 +4,7 @@
     background-color: #5C67C6;
     height: 50px;
     width: 100%;
-    position: fixed;
+    margin-top: 0px;
 }
 
 .img-link {
@@ -43,6 +43,7 @@ ul {
     text-align: center;
     padding: 10px 100px 15px 0px;
     font-size: 150%;
+    color: white;
 }
 
 .login-link {
@@ -68,3 +69,26 @@ ul {
     filter: brightness(95%);
 }
 
+.menu-toggle {
+    float: right;
+    color: #eee;
+    background-color: #555;
+    border: solid 1px #777;
+    border-radius: 5px;
+    height: 40px;
+    padding: 10px 20px;
+    margin: 20px 15px;
+}
+
+@media(max-width:480px) {
+    
+    .cabecalho p {
+        font-size: 15px;
+        padding: 15px;
+    }
+
+   .login-link p {
+       padding: 10px;
+   }
+    
+}

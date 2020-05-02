@@ -15,7 +15,7 @@ const routes = express.Router()
 routes.get('/:apelido', ProfileController.indexProfile)
 
 routes.get('/buscar/estabelecimentos', EstController.index)
-routes.get('/buscar/estabelecimentos_pertos', EstController.estPertos)
+routes.post('/buscar/estabelecimentos_pertos', EstController.estPertos)
 
 //buscar est por email
 routes.post('/buscar/estabelecimentoEmail', EstController.estEmail)
@@ -40,5 +40,7 @@ routes.delete('/perfil/deletar_foto/:id', authMiddleware, ProfileController.dele
 
 routes.post('/perfil/news', authMiddleware, NewsController.create)
 
+// testes
+//routes.get('/perfil/foto_perfil', authMiddleware, ProfileController.getFoto)
 
 module.exports = routes

@@ -4,9 +4,9 @@ const assetsUtils = require('../../assets/assetsUtils')
 module.exports = {
 
     //Convertendo arquivo em binário
-    base64_encode(fileName, path = `${assetsUtils.assetsDir}/temp/imagesUploaded/`) {
+    async base64_encode(fileName, path = `${assetsUtils.assetsDir}/temp/imagesUploaded/`) {
         try {
-            const bitmap = fs.readFileSync(`${path}${fileName}`);
+            const bitmap = await fs.readFileSync(`${path}${fileName}`);
             return new Buffer.from(bitmap).toString('base64');
         } catch (error) {
             console.log(error, 'erro ao ler arquivo')
