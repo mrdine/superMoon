@@ -1,9 +1,19 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { Link, useHistory } from 'react-router-dom'
 import Headers from '../../utils/components/header'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import Galeria from '../../utils/components/galeria'
+//https://github.com/rcaferati/react-awesome-slider/
+import AwesomeSlider from 'react-awesome-slider';
+import ImageGallery from 'react-image-gallery';
+import 'react-awesome-slider/dist/styles.css';
+import { Slide } from 'react-slideshow-image'
 
 import api from '../../services/api'
+
+import logo from '../../assets/logo.png'
+import sem from '../../assets/rocket.png'
+
 
 import utils from '../../utils'
 import './styles.css'
@@ -11,7 +21,7 @@ import './styles.css'
 export default function MeuPerfil() {
   const [meusDados, setMeusDados] = useState({})
   const [myNews, setMyNews] = useState([])
-
+  const [myFotos, setMyFotos] = useState([])
 
   const token = localStorage.getItem('token')
   const email = localStorage.getItem('email')
@@ -20,11 +30,10 @@ export default function MeuPerfil() {
 
   let imagePerfil = ''
   let entrega = <span className="label label-danger">Não</span>
-  let endereco = {}
+  let endereco = { uf: '', cidade: '', bairro: '', rua: '', numero: '', complemento: '' }
   let nome = ''
   let descricao = ''
   let categoria = ''
-
 
 
   // tem que ser dentro do if para ser feito após carregar os dados
@@ -47,6 +56,9 @@ export default function MeuPerfil() {
 
   }
 
+
+
+
   if (!token) {
     history.push('/')
   }
@@ -58,9 +70,12 @@ export default function MeuPerfil() {
         Authorization: token
       }
     })
-      .then(function (response) {
+      .then(async function (response) {
         setMeusDados(response.data)
-        console.log(meusDados)
+        setMyFotos(response.data.myImages)
+        console.log('Dentro da promisse', meusDados)
+        console.log('Dentro da promisse', myFotos)
+
       })
       .catch(function (error) {
         console.log(error)
@@ -98,11 +113,17 @@ export default function MeuPerfil() {
       alert('Erro ao deletar caso, tente novamente')
     }
   }
-
   console.log('Dados', meusDados)
   console.log('News', myNews)
+  console.log('Imagens da galeria', myFotos)
 
-
+  const properties = {
+    duration: 5000,
+    transitionDuration: 500,
+    infinite: true,
+    indicators: true,
+    arrows: true
+  }
 
   return (
     <div>
@@ -149,6 +170,16 @@ export default function MeuPerfil() {
               </div>
             </div>
 
+            <div id="galeriaImagens">
+              <div className="row">
+                <div className="col-sm-12">
+                   
+
+                   
+                </div>
+              </div>
+            </div>
+
             <div id="news">
 
               <InfiniteScroll dataLength={myNews.length} //This is important field to render the next data
@@ -162,9 +193,9 @@ export default function MeuPerfil() {
                 {myNews.map((theNew) => {
 
                   //2020-05-03T01:56:14.605Z
-                  let dia = theNew.data.substring(8,10)
-                  let mes = theNew.data.substring(5,7)
-                  let ano = theNew.data.substring(0,4)
+                  let dia = theNew.data.substring(8, 10)
+                  let mes = theNew.data.substring(5, 7)
+                  let ano = theNew.data.substring(0, 4)
 
 
                   return (
@@ -174,18 +205,18 @@ export default function MeuPerfil() {
 
                           <div className="row">
                             <div className="col-sm-11">
-                  <p className="pull-left">{`${dia}/${mes}/${ano}`}</p>
+                              <p className="pull-left">{`${dia}/${mes}/${ano}`}</p>
                             </div>
                             <div className="col-sm-1">
-                              <p className="pull-right"><span onClick={() => {handleDeleteNews(theNew.id)}} className="glyphicon glyphicon-trash"></span></p>
+                              <p className="pull-right"><span onClick={() => { handleDeleteNews(theNew.id) }} className="glyphicon glyphicon-trash"></span></p>
                             </div>
                           </div>
                           <div className="row">
-                  <h4>{theNew.titulo}</h4>
+                            <h4>{theNew.titulo}</h4>
                           </div>
 
                           <div className="row">
-                  <p>{theNew.conteudo}</p>
+                            <p>{theNew.conteudo}</p>
                           </div>
 
                         </div>
@@ -220,7 +251,7 @@ export default function MeuPerfil() {
         </div>
       </div>
 
-      
+
 
 
 

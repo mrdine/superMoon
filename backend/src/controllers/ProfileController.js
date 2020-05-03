@@ -81,9 +81,9 @@ module.exports = {
                 .select('imagem')
                 .where({ estabelecimento: estabelecimento.email, perfil: true }).first()
             estabelecimento.myPerfilImage = imageBD.imagem
-            
+
             estabelecimento.myNews = await connection('news')
-                .select('id','titulo', 'data', 'conteudo')
+                .select('id', 'titulo', 'data', 'conteudo')
                 .where('estabelecimento', estabelecimento.email)
 
             response.send(estabelecimento)
@@ -219,7 +219,7 @@ module.exports = {
                                 await connection('imagens').where({
                                     estabelecimento: email,
                                     perfil: true
-                                }).update('perfil', false)
+                                }).del()
                             }
                             // adicionar imagem no bd
                             const binaryFile = await fileConverter.base64_encode(newName)
@@ -278,7 +278,7 @@ module.exports = {
 
         try {
             form.parse(request, async function (err, fields, files) {
-                const arquivos = files.files
+                const arquivos = files.fotos
                 // se for mais que uma imagem
                 if (arquivos.name === undefined) {
                     //console.log('é array')
@@ -300,25 +300,29 @@ module.exports = {
 
                             const filepath = arquivo.path
                             const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-                            fs.rename(filepath, newpath, (err) => {
+                            fs.rename(filepath, newpath, async (err) => {
                                 if (err) {
                                     console.log(err, 'erro ao renomear arquivo')
                                     return response.status(401).send({ error: 'Erro, tente novamente' })
                                 }
-                            })
-                            // redimensionar imagem para 480x270
-                            //await resizeImage([newpath], 480, 270)
-                            resizeImage.resizeImage2(newpath)
 
-                            // adicionar imagem no bd
-                            const binaryFile = fileConverter.base64_encode(newName)
-                            await connection('imagens').insert({
-                                perfil: false,
-                                imagem: binaryFile,
-                                estabelecimento: email
+                                // redimensionar imagem para 480x270
+                                //await resizeImage([newpath], 480, 270)
+                                //resizeImage.resizeImage2(newpath)
+
+                                // adicionar imagem no bd
+                                const binaryFile = await fileConverter.base64_encode(newName)
+                                await connection('imagens').insert({
+                                    perfil: false,
+                                    imagem: binaryFile,
+                                    estabelecimento: email
+                                })
+                                // excluir imagem da past temp
+                                fs.unlinkSync(newpath)
+                                return response.send()
+
                             })
-                            // excluir imagem da past temp
-                            fs.unlinkSync(newpath)
+
 
                         } else {
                             return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
@@ -334,7 +338,6 @@ module.exports = {
                 else {
                     // verificar se arquivo é uma imagem
                     const fileNome = arquivos.name
-
                     const parts = fileNome.split('.')
                     if (!parts.length === 2) {
                         return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
@@ -349,24 +352,29 @@ module.exports = {
 
                         const filepath = arquivos.path
                         const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-                        fs.rename(filepath, newpath, (err) => {
+                        fs.rename(filepath, newpath, async (err) => {
                             if (err) {
                                 console.log(err, 'erro ao renomear arquivo')
                                 return response.status(401).send({ error: 'Erro, tente novamente' })
                             }
+
+                            const binaryFile = await fileConverter.base64_encode(newName)
+                            // adicionar imagem no bd
+
+
+                            await connection('imagens').insert({
+                                perfil: false,
+                                imagem: binaryFile,
+                                estabelecimento: email
+                            })
+                            // excluir imagem da past temp
+                            fs.unlinkSync(newpath)
+
+                            return response.send()
                         })
 
 
 
-                        // adicionar imagem no bd
-                        const binaryFile = fileConverter.base64_encode(newName)
-                        await connection('imagens').insert({
-                            perfil: false,
-                            imagem: binaryFile,
-                            estabelecimento: email
-                        })
-                        // excluir imagem da past temp
-                        fs.unlinkSync(newpath)
                     } else {
                         return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
                     }
@@ -400,6 +408,12 @@ module.exports = {
 
     },
 
+    async getFotos(request, response) {
+        const email = request.body
+        const imagens = await connection('imagens').select('id', 'imagem', 'perfil').where('estabelecimento', email)
+        return response.send(imagens)
+    },
+
     async getFoto(request, response) {
         const email = request.estEmail
         const binary = await connection('imagens').where({ estabelecimento: email, perfil: true }).select('imagem', 'perfil').first()
@@ -407,4 +421,6 @@ module.exports = {
         return response.send('oi')
 
     }
+
+    
 }

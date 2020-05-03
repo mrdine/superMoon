@@ -12,13 +12,19 @@ import rocket from '../../assets/rocket.png'
 
 import utils from '../../utils'
 
-export default function Login() {
+import Galeria from '../../utils/components/galeria'
 
+export default function Teste() {
 
+    const meuarray = []
     return(
         <div>
             <Headers tipo='inicial'></Headers>
-            
+            <br/>
+
+            <Galeria tipo='meuperfil' fotos={meuarray}>
+
+            </Galeria>
         </div>
         
     )
