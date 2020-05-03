@@ -182,7 +182,7 @@ export default function Cadastro() {
 
                     <button className='button' id='buttonCadastro' type='submit'>Cadastrar-se</button>
 
-                    <h1>Já tem uma conta? <Link className='linkLogin' to='/login'>Logue-se</Link></h1>
+                    <h1 id="logue-se">Já tem uma conta? <Link id="logue-se" className='linkLogin' to='/login'>Faça login</Link></h1>
                 </form>
             </aside>
 

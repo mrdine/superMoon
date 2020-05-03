@@ -20,5 +20,17 @@ module.exports = {
             return response.status(401).json({ error: 'Erro, tente novamente' }) // 401: Não autorizado
         }
         
+    },
+
+    async delete(request, response) {
+        const email = request.estEmail
+        const id = request.params.id
+        try {
+            await connection('news').where('id', id).del()
+        } catch (error) {
+            console.log(error)
+        }
+
+        response.send()
     }
 }

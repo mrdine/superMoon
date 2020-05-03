@@ -28,14 +28,24 @@ module.exports = {
 
         estabelecimento.myImages = await connection('imagens')
             .select('id', 'imagem', 'perfil')
-            .where('estabelecimento', email)
+            .where({ estabelecimento: estabelecimento.email, perfil: false })
 
-        estabelecimento.myNews = await connection('news')
-            .select('titulo', 'data', 'conteudo')
-            .where('estabelecimento', email)
+        estabelecimento.myPerfilImage = await connection('imagens')
+            .select('imagem')
+            .where({ estabelecimento: email, perfil: true }).first()
 
 
         response.send(estabelecimento)
+    },
+
+    async getNews(request, response) {
+        const email = request.estEmail
+        if (!email) {
+            return response.status(401).send('Insira email')
+        }
+        const news = await connection('news').select('*').where('estabelecimento', email)
+
+        response.send(news)
     },
 
     // Quando alguem visita a pagina de perfil
@@ -65,10 +75,15 @@ module.exports = {
 
             estabelecimento.myImages = await connection('imagens')
                 .select('id', 'imagem', 'perfil')
-                .where('estabelecimento', estabelecimento.email)
+                .where({ estabelecimento: estabelecimento.email, perfil: false })
 
+            const imageBD = await connection('imagens')
+                .select('imagem')
+                .where({ estabelecimento: estabelecimento.email, perfil: true }).first()
+            estabelecimento.myPerfilImage = imageBD.imagem
+            
             estabelecimento.myNews = await connection('news')
-                .select('titulo', 'data', 'conteudo')
+                .select('id','titulo', 'data', 'conteudo')
                 .where('estabelecimento', estabelecimento.email)
 
             response.send(estabelecimento)
@@ -185,12 +200,12 @@ module.exports = {
                             }
                             try {
                                 resizeImage(newpath, newpath)
-                                
+
                             } catch (error) {
                                 console.log('Erro ao redimensionar imagem', error)
                             }
                         })
-                        
+
 
 
                         try {

@@ -70,9 +70,9 @@ export default function Inicial() {
         <div>
             <Headers tipo='inicial'></Headers>
             <img className='logo' src={logo} alt='supermoon'></img>
-
             <aside className='busca'>
                 <form onSubmit={handleBusca}>
+                    
                     <h1>Procure estabelecimentos perto de você!</h1>
                     <input className='ufInput'
                         placeholder="UF"

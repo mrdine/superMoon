@@ -12,6 +12,7 @@ const Headers = props => {
 
   const handleSair = () =>{
     localStorage.removeItem('token')
+    localStorage.removeItem('email')
   }
 
 
@@ -58,7 +59,7 @@ const Headers = props => {
             
             <ul>
               <li>
-                <Link className='link' to='/meu_perfil'>
+                <Link className='link' to='/perfil'>
                   <p>Meu Perfil</p>
                 </Link>
               </li>

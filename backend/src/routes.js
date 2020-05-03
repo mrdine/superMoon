@@ -30,6 +30,7 @@ routes.post('/recuperar_senha', SessionController.recuperar)
 routes.post('/recuperar_senha/resetar_senha', SessionController.resetar)
 
 routes.get('/perfil/meu_perfil', authMiddleware, ProfileController.index)
+routes.get('/perfil/my_news', authMiddleware, ProfileController.getNews)
 routes.get('/perfil/editar', authMiddleware, ProfileController.indexEditar)
 // tenho que usar o get acima para colocar os values no form no react
 routes.post('/perfil/editar', authMiddleware, ProfileController.editar)
@@ -39,6 +40,7 @@ routes.delete('/perfil/deletar_foto/:id', authMiddleware, ProfileController.dele
 
 
 routes.post('/perfil/news', authMiddleware, NewsController.create)
+routes.delete('/perfil/deletar_news/:id', authMiddleware, NewsController.delete)
 
 // testes
 //routes.get('/perfil/foto_perfil', authMiddleware, ProfileController.getFoto)

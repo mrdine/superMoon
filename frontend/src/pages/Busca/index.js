@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import { FiPower, FiTrash2 } from 'react-icons/fi'
 import Headers from '../../utils/components/header'
 import Categoria from '../../utils/components/categoria'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 import api from '../../services/api'
 
@@ -11,12 +12,15 @@ import './styles.css'
 import lua from '../../assets/solua.png'
 import fileConverter from '../../utils/fileConverter'
 
+import assetsUtils from '../../assets/assetsUtils'
+
 export default function Busca() {
     const [estabelecimentos, setEstabelecimentos] = useState([])
 
     let ufL = localStorage.getItem('uf')
     let cidadeL = localStorage.getItem('cidade')
-
+    let categoriaL = localStorage.getItem('categoria')
+    let nomeL = localStorage.getItem('nome')
 
     let token = localStorage.getItem('token')
     let header = 'inicial'
@@ -32,7 +36,6 @@ export default function Busca() {
     const [categoria, setCategoria] = useState('')
 
 
-
     useEffect(() => {
         if (ufL !== null) {
             setUf(ufL.toUpperCase())
@@ -41,6 +44,12 @@ export default function Busca() {
         if (cidadeL !== null) {
             setcidade(cidadeL)
 
+        }
+        if (categoriaL !== null) {
+            setCategoria(categoriaL)
+        }
+        if (nomeL !== null) {
+            setNome(nomeL)
         }
         // Tentativa de fazer ele carregar automaticamente ao abrir a pagina
         /*
@@ -61,11 +70,11 @@ export default function Busca() {
 
     }, [ufL, cidadeL])
 
-    
+
 
     async function handleBusca(e) {
         e.preventDefault()
-        if(categoria === categoria) {
+        if (categoria === categoria) {
             setCategoria(undefined)
         }
 
@@ -85,9 +94,9 @@ export default function Busca() {
 
 
     }
-    // converter image para 480x270
-    const teste = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
+    function chegouNoFinal() {
+        return
+    }
 
     return (
         <div>
@@ -123,14 +132,34 @@ export default function Busca() {
                 <div className='container' id='firstContainer'>
                     <div className='row'>
 
-                        {estabelecimentos.map(estabelecimento => (
-                            <div key={estabelecimento.apelido} className='col-sm-4'>
-                                <div className='panel panel-primary'>
-                                    <div className="panel-heading text-center">{estabelecimento.nome}</div>
-                                    <div className="panel-body"><img className="objetoImage" src={lua} className="img-responsive" style={{ width: '100%' }} /></div>
-                                </div>
-                            </div>
-                        ))}
+                        <InfiniteScroll
+                            dataLength={estabelecimentos.length} //This is important field to render the next data
+                            next={chegouNoFinal}
+                            hasMore={false}
+                            loader={<h4>Carregando</h4>}
+                            endMessage={
+                                ''
+                            }>
+
+
+
+                            {estabelecimentos.map((estabelecimento) => {
+                                let filename = `${estabelecimento.apelido}.png`
+                                let path = `${assetsUtils.myDir}/perfis/`
+
+
+                                return (
+
+                                    <div key={estabelecimento.apelido} className='col-sm-4'>
+                                        <div className='panel panel-primary'>
+                                            <div className="panel-heading text-center">{estabelecimento.nome}</div>
+                                            <div className="panel-body"><img className="objetoImage" src={`data:image${estabelecimento.apelido}/jpeg;base64,${estabelecimento.imagem}`} className="img-responsive" style={{ width: '100%' }} /></div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </InfiniteScroll>
+
 
 
 

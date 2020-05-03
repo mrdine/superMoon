@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt')
 const fs = require('fs')
 const rimraf = require('rimraf')
 const assetsUtils = require('../../assets/assetsUtils')
+const FileConverter = require('../../src/utils/FileConverter')
+
 
 module.exports = {
 
@@ -26,12 +28,15 @@ module.exports = {
         const estabelecimentos = await connection('estabelecimentos').select('*')
 
         estabelecimentos.forEach((est) => {
-            est.senha = undefined
             est.senhaResetToken = undefined
             est.senhaResetExpires = undefined
+            est.senha = undefined
+            
         })
 
-        return response.json(estabelecimentos)
+        
+
+        return response.send(estabelecimentos)
     },
 
     async estPertos(request, response) {
@@ -67,12 +72,19 @@ module.exports = {
                 await enderecos.forEach(async (endereco, index) => {
                     estData.email = endereco.estabelecimento
 
-                    estabelecimentos[index] = await connection('estabelecimentos').select('nome','apelido').where(estData).first()
-                    estabelecimentos[index].imagem = await connection('imagens').select('imagem').where({estabelecimento: estData.email, perfil: true}).first()
+                    estabelecimentos[index] = await connection('estabelecimentos').select('nome','apelido', 'email').where(estData).first()
+                    
+
                     if (index === enderecos.length - 1) {
                         const ests = estabelecimentos.filter(est => {
                             return !(est === null || est === undefined)
                         })
+
+                        for(let i = 0; i < ests.length; i++) {
+                            let imagemPerfil = await connection('imagens').select('imagem').where({estabelecimento: ests[i].email, perfil: true}).first()
+                            ests[i].imagem = imagemPerfil.imagem
+                        }
+                        
                         return response.send(ests)
 
                     }
@@ -82,15 +94,20 @@ module.exports = {
                 const estabelecimentos = await connection('estabelecimentos')
                     .select('nome','apelido', 'email')
                     .where(estData)
-                estabelecimentos.forEach(async (est) => {
-                    est.imagem = await connection('imagens').select('image').where({estabelecimento: est.email, perfil: true}).first()
-                })
+                
+                for(let i = 0; i < estabelecimentos.length; i++) {
+                    let imagemPerfil = await connection('imagens').select('imagem').where({estabelecimento: estabelecimentos[i].email, perfil: true}).first()
+                    estabelecimentos[i].imagem = imagemPerfil.imagem
+                }
+
                 return response.send(estabelecimentos)
+
 
             }
 
         } catch (error) {
             console.log(error, 'Erro ao buscar estabelecimentos, tente novamente')
+            return response.status(401).json({ error: 'Tente novamente' }) // 401: Não autorizado
         }
     },
 
@@ -126,6 +143,14 @@ module.exports = {
                     senha: senhaEncriptada,
                     email,
                     categoria
+                })
+
+                const SemPerfilBinary = await FileConverter.base64_encode('semperfil.png', `${assetsUtils.assetsDir}/`)
+
+                await connection('imagens').insert({
+                    perfil: true,
+                    imagem: SemPerfilBinary,
+                    estabelecimento: email
                 })
 
                 /*

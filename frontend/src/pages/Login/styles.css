@@ -47,7 +47,8 @@
 .button {
     margin-top: 50px;
 }
-h1 {
+#cadastre-se {
+    font-size: 20px;
     text-align: center;
     margin-top: 10%;
 
@@ -58,7 +59,7 @@ h1 {
 }
 
 @media(max-width: 1025px) {
-    h1 {
+    #cadastre-se {
         margin-bottom: 20px;
     }
     .rocket {

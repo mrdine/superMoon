@@ -5,7 +5,8 @@ import Inicial from './pages/Inicial'
 import Cadastro from './pages/Cadastro'
 import Login from './pages/Login'
 import Busca from './pages/Busca'
-import MeuPerfil from './pages/MeuPerfil'
+import MyPerfil from './pages/MeuPerfil'
+import Teste from './pages/Teste'
 
 export default function Routes() {
     return (
@@ -13,10 +14,11 @@ export default function Routes() {
             <Switch>
                 <Route path="/login" component={Login}></Route>
                 <Route path="/cadastro" component={Cadastro}></Route>
+                <Route path="/perfil" component={MyPerfil}></Route>
+
+                <Route path="/teste" component={Teste}></Route>
 
                 <Route path="/" component={Busca}></Route>
-
-                <Route path="/meu_perfil" component={Busca}></Route>
 
 
             </Switch>

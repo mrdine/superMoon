@@ -1,6 +1,8 @@
 const fs = require('fs')
 const assetsUtils = require('../../assets/assetsUtils')
 
+
+
 module.exports = {
 
     //Convertendo arquivo em binário
@@ -29,6 +31,10 @@ module.exports = {
         }
         
     },
+
+    
+
+
 
 }
 

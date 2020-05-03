@@ -1,7 +1,7 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('news', function (table) {
-        table.increments()
+        table.increments('id')
 
         table.string('titulo').notNullable()
         table.date('data').notNullable()

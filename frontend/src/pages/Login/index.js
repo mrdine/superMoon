@@ -31,7 +31,7 @@ export default function Login() {
         
         
             localStorage.setItem('email', email)
-            localStorage.setItem('token', response.data.token)
+            localStorage.setItem('token', `Bearer ${response.data.token}`)
 
             history.push('/meu_perfil')
         } catch (error) {
@@ -61,7 +61,7 @@ export default function Login() {
 
                     <button className="button" type="submit">Entrar</button>
                 </form>
-                <h1>Não tem uma conta? <Link className='linkCadastro' to='/cadastro'>Cadastre-se</Link></h1>
+                <h1 id="cadastre-se">Não tem uma conta? <Link id="cadastre-se" className='linkCadastro' to='/cadastro'>Cadastre-se</Link></h1>
 
             </aside>
         </div>
