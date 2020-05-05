@@ -35,6 +35,27 @@ module.exports = {
         })
     },
 
+    async trocarSenha(request, response) {
+        const { email, senhaAtual, novaSenha } = request.body
+
+        const estabelecimento = await connection('estabelecimentos')
+            .select('email', 'senha')
+            .where('email', email).first()
+
+        if (!await bcrypt.compare(senhaAtual, estabelecimento.senha)) {
+            return response.status(400).json({ error: 'Senha invalida' })
+        }
+
+        // trocar a senha
+        await bcrypt.hash(novaSenha, 10)
+            .then(async (hash) => {
+                let senhaEncriptada = hash
+                await connection('estabelecimentos').where('email', email).update('senha', senhaEncriptada)
+                return response.send()  
+            })
+
+    },
+
     async recuperar(request, response) {
         const { email } = request.body
 
@@ -45,7 +66,7 @@ module.exports = {
 
             const user = users[0]
 
-                
+
             if (!user) {
                 return response.status(400).json({ error: 'Este email não foi cadastrado' })
             }
@@ -67,16 +88,16 @@ module.exports = {
                 to: email,
                 from: 'daniel.gomes071@gmail.com',
                 template: 'recuperarsenha',
-                context: { token }, 
+                context: { token },
             }, (err) => {
                 if (err) {
                     console.log(err)
-                    return response.status(400).send({ error: 'Não foi possivel enviar email de recuperação, tente novamente'})
+                    return response.status(400).send({ error: 'Não foi possivel enviar email de recuperação, tente novamente' })
                 }
                 return response.send('Ok')
             })
 
-             
+
         } catch (error) {
             console.log(error)
             response.status(400).send({ error: 'Erro ao tentar recuperar senha, tente novamente' })
@@ -90,36 +111,36 @@ module.exports = {
             const users = await connection('estabelecimentos').select('senhaResetToken', 'senhaResetExpires')
                 .where('email', email)
             const user = users[0]
-            
-            if(!user) {
-                response.status(400).send({error: 'Conta não encontrada'})
+
+            if (!user) {
+                response.status(400).send({ error: 'Conta não encontrada' })
             }
 
             if (token !== user.senhaResetToken) {
-                response.status(400).send({error: 'Não foi possivel resetar a senha, gere um novo email de recuperação'})
+                response.status(400).send({ error: 'Não foi possivel resetar a senha, gere um novo email de recuperação' })
             }
 
             const now = new Date()
 
-            if ( now > user.senhaResetExpires) {
-                response.status(400).send({error: 'Não foi possivel resetar a senha, token expirado, gere um novo email de recuperação'})
+            if (now > user.senhaResetExpires) {
+                response.status(400).send({ error: 'Não foi possivel resetar a senha, token expirado, gere um novo email de recuperação' })
             }
 
             // salvar nova senha do usuario encriptada
             await bcrypt.hash(senha, 10)
-            .then(async (hash) => {
-                let senhaEncriptada = hash
+                .then(async (hash) => {
+                    let senhaEncriptada = hash
 
-                await connection('estabelecimentos')
-                .where('email', email)
-                .update('senha', senhaEncriptada)
+                    await connection('estabelecimentos')
+                        .where('email', email)
+                        .update('senha', senhaEncriptada)
 
-            })
+                })
 
             response.send()
 
-        } catch(err) {
-            response.status(400).send({error: 'Não foi possivel resetar a senha, tente novamente'})
+        } catch (err) {
+            response.status(400).send({ error: 'Não foi possivel resetar a senha, tente novamente' })
         }
     }
 }

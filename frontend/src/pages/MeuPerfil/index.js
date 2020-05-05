@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom'
 import Headers from '../../utils/components/header'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Galeria from '../../utils/components/galeria'
-
+import Delivery from '../../utils/components/delivery'
 
 import api from '../../services/api'
 
@@ -23,20 +23,23 @@ export default function MeuPerfil() {
   const history = useHistory()
 
   let imagePerfil = ''
-  let entrega = <span className="label label-danger">Não</span>
+  let entrega
   let endereco = { uf: '', cidade: '', bairro: '', rua: '', numero: '', complemento: '' }
   let nome = ''
   let descricao = ''
   let categoria = ''
   let telefone = ''
+  const [deliveryAux, setDeliveryAux] = useState(false)
 
   // tem que ser dentro do if para ser feito após carregar os dados
   if (meusDados.myPerfilImage) {
     // imagem de perfil
     imagePerfil = meusDados.myPerfilImage.imagem
     // se faz entrega
-    if (meusDados.myPerfil.delivery) {
+    if (meusDados.myPerfil.delivery === true) {
       entrega = <span className="label label-success">Sim</span>
+    } else {
+      entrega = <span className="label label-danger">Não</span>
     }
 
     endereco = meusDados.myEndereco
@@ -45,10 +48,10 @@ export default function MeuPerfil() {
     }
 
     nome = meusDados.nome
-    descricao = meusDados.descricao
+    descricao = meusDados.myPerfil.descricao
     categoria = meusDados.categoria
     telefone = meusDados.telefone
-    if(telefone === '') {
+    if (telefone === '') {
       telefone = 'Não inserido'
     }
 
@@ -71,6 +74,7 @@ export default function MeuPerfil() {
       .then(async function (response) {
         setMeusDados(response.data)
         setMyFotos(response.data.myImages)
+
         console.log('Dentro da promisse', meusDados)
         console.log('Dentro da promisse', myFotos)
 
@@ -115,7 +119,8 @@ export default function MeuPerfil() {
   console.log('News', myNews)
   console.log('Imagens da galeria', myFotos)
 
-  
+
+
 
   return (
     <div>
@@ -130,24 +135,34 @@ export default function MeuPerfil() {
               <img src={`data:image${meusDados.apelido}/jpeg;base64,${imagePerfil}`} className="img.fluid" height="auto" width="100%" alt="Avatar" />
             </div>
             <div className="well">
-              <p><a style={{textDecoration: 'none'}}>Faz Entrega?</a></p>
+              <p><a style={{ textDecoration: 'none' }}>Faz Entrega?</a></p>
               <p>
-                {entrega}
+                {[0].map((elemento) => {
+                  if (meusDados.myPerfil) {
+                    if (`${meusDados.myPerfil.delivery}` === 'true') {
+                      return (<span className="label label-success">Sim</span>)
+                    } else {
+                      return (<span className="label label-danger">Não</span>)
+                    }
+                  } else {
+                    return (<span className="label label-danger">Não</span>)
+                  }
+                })}
               </p>
             </div>
             <div className="well">
-              <p><a style={{textDecoration: 'none'}}>Categoria</a></p>
+              <p><a style={{ textDecoration: 'none' }}>Categoria</a></p>
               <p>
                 {categoria}
               </p>
             </div>
             <div className="well">
-              <p><a style={{textDecoration: 'none'}}>Telefone</a></p>
+              <p><a style={{ textDecoration: 'none' }}>Telefone</a></p>
               <p>{`${telefone}`}</p>
             </div>
             <div className="well">
-              <p><a style={{textDecoration: 'none'}}>Endereço</a></p>
-              <p>{`${endereco.uf}, ${endereco.cidade}, ${endereco.bairro}, ${endereco.rua}, ${endereco.numero}. ${endereco.complemento}`}</p>
+              <p><a style={{ textDecoration: 'none' }}>Endereço</a></p>
+              <p>{`${endereco.uf}, ${utils.firstLetterUpper(endereco.cidade)}, ${endereco.bairro}, ${endereco.rua}, ${endereco.numero}. ${endereco.complemento}`}</p>
             </div>
 
 
@@ -171,7 +186,7 @@ export default function MeuPerfil() {
                 <div className="col-sm-12">
 
 
-                  
+
                   <Galeria tipo='meuperfil' fotos={myFotos}>
 
                   </Galeria>
@@ -184,7 +199,8 @@ export default function MeuPerfil() {
             </div>
 
             <div id="news">
-              <Link to="/perfil/nova_noticia"><h3 id="cadastrarNoticia">Adicionar nova notícia</h3></Link>
+              <Link to="/perfil/cadastrarNews"><h3 id="cadastrarNoticia">Adicionar nova notícia</h3></Link>
+              <br></br>
               <InfiniteScroll dataLength={myNews.length} //This is important field to render the next data
                 next={() => { return }}
                 hasMore={false}

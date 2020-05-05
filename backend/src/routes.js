@@ -26,6 +26,7 @@ routes.post('/cadastrar_estabelecimento', EstController.create)
 routes.delete('/excluir_estabelecimento', authMiddleware, EstController.delete)
 
 routes.post('/login', SessionController.create)
+routes.post('/trocar_senha', authMiddleware, SessionController.trocarSenha)
 routes.post('/recuperar_senha', SessionController.recuperar)
 routes.post('/recuperar_senha/resetar_senha', SessionController.resetar)
 

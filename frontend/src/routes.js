@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Busca from './pages/Busca'
 import MyPerfil from './pages/MeuPerfil'
 import EditarMeuPerfil from './pages/EditarPerfil'
+import CadastrarNews from './pages/CadastrarNews'
 import Teste from './pages/Teste'
 
 
@@ -18,6 +19,7 @@ export default function Routes() {
                 <Route  exact path="/cadastro" component={Cadastro}></Route>
                 <Route  exact path="/perfil" component={MyPerfil}></Route>
                 <Route  exact path='/perfil/editar' component={EditarMeuPerfil}></Route>
+                <Route  exact path='/perfil/cadastrarNews' component={CadastrarNews}></Route>
 
                 <Route  exact path="/teste" component={Teste}></Route>
 

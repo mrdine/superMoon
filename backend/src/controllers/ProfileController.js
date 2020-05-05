@@ -277,10 +277,10 @@ module.exports = {
 
         try {
             form.parse(request, async function (err, fields, files) {
-                const arquivos = files.fotos
+                let arquivos = files
                 // se for mais que uma imagem
-                if (arquivos.name === undefined) {
-                    //console.log('é array')
+                if (files.file.name === undefined) {
+                    arquivos = files.file
                     arquivos.forEach(async (arquivo) => {
                         // verificar se arquivo é uma imagem
                         const fileNome = arquivo.name
@@ -336,7 +336,7 @@ module.exports = {
                 // se for só uma imagem
                 else {
                     // verificar se arquivo é uma imagem
-                    const fileNome = arquivos.name
+                    const fileNome = arquivos.file.name
                     const parts = fileNome.split('.')
                     if (!parts.length === 2) {
                         return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
@@ -349,7 +349,7 @@ module.exports = {
                         let randomN = randomNumber.getRandomInt(0, 7777)
                         let newName = `${now}${randomN}.png`
 
-                        const filepath = arquivos.path
+                        const filepath = arquivos.file.path
                         const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
                         fs.rename(filepath, newpath, async (err) => {
                             if (err) {
