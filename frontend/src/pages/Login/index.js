@@ -17,6 +17,11 @@ export default function Login() {
     const [senha, setSenha] = useState('')
     const history = useHistory()
 
+    const token = localStorage.getItem('token')
+    if(token) {
+        history.push('/perfil')
+    }
+
     async function handleLogin(e) {
         e.preventDefault()
 
@@ -33,7 +38,7 @@ export default function Login() {
             localStorage.setItem('email', email)
             localStorage.setItem('token', `Bearer ${response.data.token}`)
 
-            history.push('/meu_perfil')
+            history.push('/perfil')
         } catch (error) {
             alert('Email ou senha incorretos')
         }

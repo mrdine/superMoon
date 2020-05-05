@@ -1,0 +1,34 @@
+/* Set black background color, white text and some padding */
+#footerMeuPerfil {
+    background-color: #555;
+    color: white;
+    padding: 15px;
+    margin-bottom: 100px;
+  }
+  
+  #corpoMeuPerfil {
+      margin-top: 40px;
+  }
+  
+  #botaoPerfilFoto {
+      margin-top: 5px;
+  }
+  
+    
+  #cadastrarNoticia {
+      color: white;
+  }
+
+  #newsPerfil {
+      background-color: white;
+    }
+  
+  
+  #anuncioExtra1, #anuncioExtra2 {
+      display: none;
+  }
+  
+  #meuAnuncio {
+      display: none;
+  }
+

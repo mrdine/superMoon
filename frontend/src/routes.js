@@ -6,19 +6,22 @@ import Cadastro from './pages/Cadastro'
 import Login from './pages/Login'
 import Busca from './pages/Busca'
 import MyPerfil from './pages/MeuPerfil'
+import EditarMeuPerfil from './pages/EditarPerfil'
 import Teste from './pages/Teste'
+
 
 export default function Routes() {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/login" component={Login}></Route>
-                <Route path="/cadastro" component={Cadastro}></Route>
-                <Route path="/perfil" component={MyPerfil}></Route>
+                <Route  exact path="/login" component={Login}></Route>
+                <Route  exact path="/cadastro" component={Cadastro}></Route>
+                <Route  exact path="/perfil" component={MyPerfil}></Route>
+                <Route  exact path='/perfil/editar' component={EditarMeuPerfil}></Route>
 
-                <Route path="/teste" component={Teste}></Route>
+                <Route  exact path="/teste" component={Teste}></Route>
 
-                <Route path="/" component={Busca}></Route>
+                <Route exact path="/" component={Busca}></Route>
 
 
             </Switch>

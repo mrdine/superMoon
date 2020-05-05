@@ -3,16 +3,10 @@ import { Link, useHistory } from 'react-router-dom'
 import Headers from '../../utils/components/header'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Galeria from '../../utils/components/galeria'
-//https://github.com/rcaferati/react-awesome-slider/
-import AwesomeSlider from 'react-awesome-slider';
-import ImageGallery from 'react-image-gallery';
-import 'react-awesome-slider/dist/styles.css';
-import { Slide } from 'react-slideshow-image'
+
 
 import api from '../../services/api'
 
-import logo from '../../assets/logo.png'
-import sem from '../../assets/rocket.png'
 
 
 import utils from '../../utils'
@@ -34,7 +28,7 @@ export default function MeuPerfil() {
   let nome = ''
   let descricao = ''
   let categoria = ''
-
+  let telefone = ''
 
   // tem que ser dentro do if para ser feito após carregar os dados
   if (meusDados.myPerfilImage) {
@@ -53,6 +47,10 @@ export default function MeuPerfil() {
     nome = meusDados.nome
     descricao = meusDados.descricao
     categoria = meusDados.categoria
+    telefone = meusDados.telefone
+    if(telefone === '') {
+      telefone = 'Não inserido'
+    }
 
   }
 
@@ -117,13 +115,7 @@ export default function MeuPerfil() {
   console.log('News', myNews)
   console.log('Imagens da galeria', myFotos)
 
-  const properties = {
-    duration: 5000,
-    transitionDuration: 500,
-    infinite: true,
-    indicators: true,
-    arrows: true
-  }
+  
 
   return (
     <div>
@@ -134,23 +126,27 @@ export default function MeuPerfil() {
         <div className="row">
           <div className="col-sm-3 well">
             <div className="well">
-              <p><a href="#">Editar Perfil</a></p>
+              <p><Link to='/perfil/editar'><a>Editar Perfil</a></Link></p>
               <img src={`data:image${meusDados.apelido}/jpeg;base64,${imagePerfil}`} className="img.fluid" height="auto" width="100%" alt="Avatar" />
             </div>
             <div className="well">
-              <p><a href="#">Faz Entrega?</a></p>
+              <p><a style={{textDecoration: 'none'}}>Faz Entrega?</a></p>
               <p>
                 {entrega}
               </p>
             </div>
             <div className="well">
-              <p><a >Categoria</a></p>
+              <p><a style={{textDecoration: 'none'}}>Categoria</a></p>
               <p>
                 {categoria}
               </p>
             </div>
             <div className="well">
-              <p><a href="#">Endereço</a></p>
+              <p><a style={{textDecoration: 'none'}}>Telefone</a></p>
+              <p>{`${telefone}`}</p>
+            </div>
+            <div className="well">
+              <p><a style={{textDecoration: 'none'}}>Endereço</a></p>
               <p>{`${endereco.uf}, ${endereco.cidade}, ${endereco.bairro}, ${endereco.rua}, ${endereco.numero}. ${endereco.complemento}`}</p>
             </div>
 
@@ -171,17 +167,24 @@ export default function MeuPerfil() {
             </div>
 
             <div id="galeriaImagens">
-              <div className="row">
+              <div className="row" >
                 <div className="col-sm-12">
-                   
 
-                   
+
+                  
+                  <Galeria tipo='meuperfil' fotos={myFotos}>
+
+                  </Galeria>
+
+
+
+
                 </div>
               </div>
             </div>
 
             <div id="news">
-
+              <Link to="/perfil/nova_noticia"><h3 id="cadastrarNoticia">Adicionar nova notícia</h3></Link>
               <InfiniteScroll dataLength={myNews.length} //This is important field to render the next data
                 next={() => { return }}
                 hasMore={false}
@@ -208,7 +211,7 @@ export default function MeuPerfil() {
                               <p className="pull-left">{`${dia}/${mes}/${ano}`}</p>
                             </div>
                             <div className="col-sm-1">
-                              <p className="pull-right"><span onClick={() => { handleDeleteNews(theNew.id) }} className="glyphicon glyphicon-trash"></span></p>
+                              <p id='lixeira' className="pull-right"><span onClick={() => { handleDeleteNews(theNew.id) }} className="glyphicon glyphicon-trash"></span></p>
                             </div>
                           </div>
                           <div className="row">

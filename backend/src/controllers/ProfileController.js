@@ -159,7 +159,6 @@ module.exports = {
                 .update('delivery', delivery)
 
 
-
             response.send()
         } catch (error) {
             console.log(error)
@@ -180,7 +179,7 @@ module.exports = {
             form.parse(request, async function (err, fields, files) {
                 if (files) {
                     // se for foto
-                    const fileName = files.imagePerfil.name
+                    const fileName = files.file.name
                     const parts = fileName.split('.')
                     if (!parts.length === 2) {
                         return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
@@ -189,7 +188,7 @@ module.exports = {
                     const [nome, extensao] = parts
                     if (extensao === 'png' || extensao === 'jpg') {
                         // renomear foto antes de enviar pro bd
-                        const filepath = files.imagePerfil.path
+                        const filepath = files.file.path
                         const pathProvisorio = `${assetsUtils.assetsDir}/temp/imagesUploaded/resize${newName}`
                         const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
 

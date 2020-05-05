@@ -161,7 +161,7 @@ export default function Cadastro() {
                         <input className='inputEst' value={nome} onChange={e => { setNome(e.target.value)}} id='nome' placeholder='Nome do Estabelecimento*'></input>
                         <MaskedInput className='inputEst' id='apelido' guide={false} value={apelido} onChange={e => setApelido(e.target.value)} placeholder='Apelido Único Para o Seu Estabelecimento*' mask={[/\w/, /\w/,/\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/,/\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/, /\w/]} ></MaskedInput>
                         
-                        <input className='inputEst' value={email} onChange={e => { setEmail(e.target.value)}} id='email' placeholder='Email*'></input>
+                        <input className='inputEst' type='email' value={email} onChange={e => { setEmail(e.target.value)}} id='email' placeholder='Email*'></input>
                         <MaskedInput className='inputEst' id='telefone' guide={false} value={telefone} onChange={e => ajeitarNumero(e.target.value)} placeholder='Telefone*' mask={['(', /[1-9]/, /\d/, ')', ' ', /\d/, /\d/,/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/]} ></MaskedInput>
                         <input className='inputEst' value={senha} onChange={e => { setSenha(e.target.value)}} id='senha1' placeholder='Senha*' type='password'></input>
                         <input className='inputEst' value={senha2} onChange={e => { setSenha2(e.target.value)}} id='senha2' placeholder='Confirme a Senha*' type='password'></input>

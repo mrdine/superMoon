@@ -153,7 +153,7 @@ export default function Busca() {
                                     <div key={estabelecimento.apelido} className='col-sm-4'>
                                         <div className='panel panel-primary'>
                                             <div className="panel-heading text-center">{estabelecimento.nome}</div>
-                                            <div className="panel-body"><img className="objetoImage" src={`data:image${estabelecimento.apelido}/jpeg;base64,${estabelecimento.imagem}`} className="img-responsive" style={{ width: '100%' }} /></div>
+                                            <img className="objetoImage" src={`data:image${estabelecimento.apelido}/jpeg;base64,${estabelecimento.imagem}`} className="img-responsive" style={{ width: '100%' }} />
                                         </div>
                                     </div>
                                 )

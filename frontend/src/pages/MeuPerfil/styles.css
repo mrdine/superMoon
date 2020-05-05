@@ -19,7 +19,11 @@
       overflow-x: hidden;
 
   }
-  
+    
+  #cadastrarNoticia {
+      color: white;
+  }
+
   #newsPerfil {
       background-color: white;
     }
