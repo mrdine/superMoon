@@ -28,7 +28,7 @@ app.use(function (req, res, next) {
 */
 
 app.use(cors({
-    'allowedHeaders': ['sessionId', 'Content-Type'],
+    'allowedHeaders': ['authorization', 'Authorization', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
     'origin': '*',
     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
