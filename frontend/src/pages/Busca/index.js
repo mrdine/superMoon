@@ -151,10 +151,13 @@ export default function Busca() {
                                 return (
 
                                     <div key={estabelecimento.apelido} className='col-sm-4'>
+                                        <Link to={`/${estabelecimento.apelido}`}>
                                         <div className='panel panel-primary'>
                                             <div className="panel-heading text-center">{estabelecimento.nome}</div>
                                             <img className="objetoImage" src={`data:image${estabelecimento.apelido}/jpeg;base64,${estabelecimento.imagem}`} className="img-responsive" style={{ width: '100%' }} />
                                         </div>
+                                        </Link>
+                                        
                                     </div>
                                 )
                             })}
