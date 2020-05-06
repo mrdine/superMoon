@@ -6,9 +6,6 @@ const cors = require('cors')
 const app = express()
 
 
-
-app.use(cors({ origin: `*`}))
-
 // Add headers
 app.use(function (req, res, next) {
 
@@ -28,6 +25,10 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+
+app.use(cors({ origin: `*`}))
+
+
 
 
 app.use(express.json())
