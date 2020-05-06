@@ -131,7 +131,7 @@ export default function MeuPerfil() {
         <div className="row">
           <div className="col-sm-3 well">
             <div className="well">
-              <p><Link to='/perfil/editar'><a>Editar Perfil</a></Link></p>
+              <p><Link to='/conta/perfil/editar'><a>Editar Perfil</a></Link></p>
               <img src={`data:image${meusDados.apelido}/jpeg;base64,${imagePerfil}`} className="img.fluid" height="auto" width="100%" alt="Avatar" />
             </div>
             <div className="well">
@@ -199,7 +199,7 @@ export default function MeuPerfil() {
             </div>
 
             <div id="news">
-              <Link to="/perfil/cadastrarNews"><h3 id="cadastrarNoticia">Adicionar nova notícia</h3></Link>
+              <Link to="/conta/perfil/cadastrarNews"><h3 id="cadastrarNoticia">Adicionar nova notícia</h3></Link>
               <br></br>
               <InfiniteScroll dataLength={myNews.length} //This is important field to render the next data
                 next={() => { return }}

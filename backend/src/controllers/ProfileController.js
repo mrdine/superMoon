@@ -48,6 +48,23 @@ module.exports = {
         response.send(news)
     },
 
+    async getNewsVisitante(request, response) {
+        let apelido = request.query.apelido
+        if (!apelido) {
+            apelido = request.params.apelido
+        }
+
+        const estabelecimento = await connection('estabelecimentos').select('email').where('apelido', apelido).first()
+        
+        const email = estabelecimento.email
+        if (!email) {
+            return response.status(401).send('Insira email')
+        }
+        const news = await connection('news').select('*').where('estabelecimento', email)
+
+        response.send(news)
+    },
+
     // Quando alguem visita a pagina de perfil
     async indexProfile(request, response) {
         let apelido = request.query.apelido
@@ -59,35 +76,26 @@ module.exports = {
             .where('apelido', apelido)
             .first()
 
-        if (estabelecimento === undefined) {
-            response.status(404).send({ message: 'Esse perfil não existe' })
-        }
-        else {
-            estabelecimento.myEndereco = await connection('enderecos')
-                .select('uf', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
-                .where('estabelecimento', estabelecimento.email)
-                .first()
+        estabelecimento.myEndereco = await connection('enderecos')
+            .select('uf', 'cidade', 'bairro', 'rua', 'numero', 'complemento')
+            .where('estabelecimento', estabelecimento.email)
+            .first()
 
-            estabelecimento.myPerfil = await connection('perfis')
-                .select('descricao', 'delivery')
-                .where('estabelecimento', estabelecimento.email)
-                .first()
+        estabelecimento.myPerfil = await connection('perfis')
+            .select('descricao', 'delivery')
+            .where('estabelecimento', estabelecimento.email)
+            .first()
 
-            estabelecimento.myImages = await connection('imagens')
-                .select('id', 'imagem', 'perfil')
-                .where({ estabelecimento: estabelecimento.email, perfil: false })
+        estabelecimento.myImages = await connection('imagens')
+            .select('id', 'imagem', 'perfil')
+            .where({ estabelecimento: estabelecimento.email, perfil: false })
 
-            const imageBD = await connection('imagens')
-                .select('imagem')
-                .where({ estabelecimento: estabelecimento.email, perfil: true }).first()
-            estabelecimento.myPerfilImage = imageBD.imagem
+        estabelecimento.myPerfilImage = await connection('imagens')
+            .select('imagem')
+            .where({ estabelecimento: estabelecimento.email, perfil: true }).first()
 
-            estabelecimento.myNews = await connection('news')
-                .select('id', 'titulo', 'data', 'conteudo')
-                .where('estabelecimento', estabelecimento.email)
 
-            response.send(estabelecimento)
-        }
+        response.send(estabelecimento)
 
 
     },

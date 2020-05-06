@@ -19,7 +19,7 @@ export default function Login() {
 
     const token = localStorage.getItem('token')
     if(token) {
-        history.push('/perfil')
+        history.push('/conta/perfil')
     }
 
     async function handleLogin(e) {
@@ -38,7 +38,7 @@ export default function Login() {
             localStorage.setItem('email', email)
             localStorage.setItem('token', `Bearer ${response.data.token}`)
 
-            history.push('/perfil')
+            history.push('/conta/perfil')
         } catch (error) {
             alert('Email ou senha incorretos')
         }
@@ -66,7 +66,7 @@ export default function Login() {
 
                     <button className="button" type="submit">Entrar</button>
                 </form>
-                <h1 id="cadastre-se">Não tem uma conta? <Link id="cadastre-se" className='linkCadastro' to='/cadastro'>Cadastre-se</Link></h1>
+                <h1 id="cadastre-se">Não tem uma conta? <Link id="cadastre-se" className='linkCadastro' to='/conta/cadastro'>Cadastre-se</Link></h1>
 
             </aside>
         </div>

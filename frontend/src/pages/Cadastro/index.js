@@ -134,14 +134,14 @@ export default function Cadastro() {
 
             const response3 = await api.post('cadastrar_estabelecimento', data)
             if(response3.data.nome === data.nome) {
-                history.push('/login')
+                history.push('/conta/login')
             } else {
                 alert('Erro, tente novamente')
             }
         } catch (error) {
             console.log(error)
             alert('Erro, tente novamente')
-            history.push('/cadastro')
+            history.push('/conta/cadastro')
         }
         
             
@@ -182,7 +182,7 @@ export default function Cadastro() {
 
                     <button className='button' id='buttonCadastro' type='submit'>Cadastrar-se</button>
 
-                    <h1 id="logue-se">Já tem uma conta? <Link id="logue-se" className='linkLogin' to='/login'>Faça login</Link></h1>
+                    <h1 id="logue-se">Já tem uma conta? <Link id="logue-se" className='linkLogin' to='/conta/login'>Faça login</Link></h1>
                 </form>
             </aside>
 

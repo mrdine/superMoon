@@ -28,7 +28,7 @@ const Headers = props => {
           <nav className='menu'>
             <ul>
               <li>
-                <Link className='login-link' to='/login'>
+                <Link className='login-link' to='/conta/login'>
                   <p className='botao'>Entrar</p>
                 </Link>
               </li>
@@ -59,12 +59,12 @@ const Headers = props => {
             
             <ul>
               <li>
-                <Link className='link' to='/perfil'>
+                <Link className='link' to='/conta/perfil'>
                   <p>Meu Perfil</p>
                 </Link>
               </li>
               <li>
-                <Link onClick={handleSair} className='link' to='/login'>
+                <Link onClick={handleSair} className='link' to='/conta/login'>
                   <p>Sair</p>
                 </Link>
               </li>

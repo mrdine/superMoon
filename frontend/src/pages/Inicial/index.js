@@ -59,7 +59,7 @@ export default function Inicial() {
             localStorage.setItem('uf', data.uf)
             localStorage.setItem('cidade', data.cidade)
 
-            history.push('/busca')
+            history.push('/')
         }
 
 

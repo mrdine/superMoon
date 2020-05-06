@@ -15,7 +15,7 @@ export default function CadastrarNews() {
     const email = localStorage.getItem('email')
     const token = localStorage.getItem('token')
     if (!token) {
-        history.push('/login')
+        history.push('/conta/login')
     }
 
     const [titulo, setTitulo] = useState('')
@@ -33,7 +33,7 @@ export default function CadastrarNews() {
                 },
                 data
             }).then(
-                history.push('/perfil')
+                history.push('/conta/perfil')
 
             )
         } catch (error) {

@@ -25,7 +25,7 @@ export default function EditarMeuPerfil() {
     const token = localStorage.getItem('token')
 
     if (!token) {
-        history.push('/login')
+        history.push('/conta/login')
     }
 
     let entrega = ''
@@ -254,7 +254,7 @@ export default function EditarMeuPerfil() {
             })
 
             console.log(response.statusText)
-            history.push('/perfil')
+            history.push('/conta/perfil')
 
         }
     }
@@ -269,7 +269,7 @@ export default function EditarMeuPerfil() {
                 <div className="row">
                     <div className="col-sm-4 well">
                         <div className="well">
-                            <p><Link to='/perfil/editar'><a>Alterar imagem de perfil</a></Link>
+                            <p><Link to='/conta/perfil/editar'><a>Alterar imagem de perfil</a></Link>
                             </p>
                             <form onSubmit={(e) => { handleMudarFotoPerfil(e) }} enctype="multipart/form-data">
                                 <div id='alterarFotoPerfil' class="form-group">
