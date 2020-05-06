@@ -175,7 +175,6 @@ module.exports = {
     },
 
     async editarImagePerfil(request, response) {
-        request.header("Access-Control-Allow-Origin", "https://supermoonn.herokuapp.com");
         const email = request.estEmail
         // DEFINIR A IMAGEM DE PERFIL
         const now = Date.now()
