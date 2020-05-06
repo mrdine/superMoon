@@ -175,6 +175,7 @@ module.exports = {
     },
 
     async editarImagePerfil(request, response) {
+        resquest.header("Access-Control-Allow-Origin", "*");
         const email = request.estEmail
         // DEFINIR A IMAGEM DE PERFIL
         const now = Date.now()
