@@ -147,7 +147,7 @@ export default function Busca() {
                                 let filename = `${estabelecimento.apelido}.png`
                                 let path = `${assetsUtils.myDir}/perfis/`
 
-
+                                console.log(estabelecimento)
                                 return (
 
                                     <div key={estabelecimento.apelido} className='col-sm-4'>
