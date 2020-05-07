@@ -5,7 +5,7 @@ const cors = require('cors')
 
 const app = express()
 
-/*
+
 // Add headers
 app.use(function (req, res, next) {
 
@@ -25,7 +25,7 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
-*/
+
 
 app.use(cors({
     'allowedHeaders': ['authorization', 'Authorization', 'Content-Type'],
