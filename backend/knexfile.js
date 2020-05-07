@@ -5,7 +5,7 @@ pg.defaults.ssl = true
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 module.exports = {
-  /*
+  
     development: {
       client: 'sqlite3',
       connection: {
@@ -16,8 +16,8 @@ module.exports = {
       },
       useNullAsDefault: true,
     },
-  */
-
+  
+/*
   development: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
@@ -26,7 +26,7 @@ module.exports = {
     },
     useNullAsDefault: true,
   },
-
+*/
   testing: {
     client: 'pg',
     connection: process.env.DATABASE_URL,
