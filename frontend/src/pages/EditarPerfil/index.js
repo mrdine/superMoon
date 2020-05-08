@@ -250,7 +250,8 @@ export default function EditarMeuPerfil() {
             // enviar
             const response = await api.post('perfil/adicionar_fotos', data, {
                 headers: {
-                    Authorization: token
+                    Authorization: token,
+                    'Access-Control-Allow-Origin': 'Authorization'
                 },
             })
 
