@@ -180,7 +180,7 @@ export default function EditarMeuPerfil() {
         }
 
         try {
-            const response = api.post('/perfil/editar', dadosE, {
+            const response = api.options('/perfil/editar', dadosE, {
                 headers: {
                     Authorization: token
                 },
