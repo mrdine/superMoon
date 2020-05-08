@@ -30,7 +30,7 @@ app.use(cors({
     'allowedHeaders': ['*','authorization', 'access-control-allow-origin' ,'Authorization', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
     'origin': 'https://supermoonn.herokuapp.com',
-    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     'preflightContinue': false
   }))
 
