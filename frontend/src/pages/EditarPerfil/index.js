@@ -117,7 +117,6 @@ export default function EditarMeuPerfil() {
                 const response = await api.post('perfil/editar_perfil_image', data, {
                     headers: {
                         Authorization: token,
-                        'Access-Control-Allow-Origin': 'Authorization'
                     },
 
                 })
@@ -252,6 +251,7 @@ export default function EditarMeuPerfil() {
                 headers: {
                     Authorization: token,
                     'Access-Control-Allow-Origin': 'Authorization',
+                    'Access-Control-Allow-Origin': 'https://supermoonn.herokuapp.com'
                 },
             })
 
