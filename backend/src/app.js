@@ -28,7 +28,7 @@ app.use(function (req, res, next) {
 
 
 app.use(cors({
-    'allowedHeaders': ['authorization', 'Authorization', 'Content-Type'],
+    'allowedHeaders': ['authorization', 'access-control-allow-origin' ,'Authorization', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
     'origin': 'https://supermoonn.herokuapp.com',
     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
