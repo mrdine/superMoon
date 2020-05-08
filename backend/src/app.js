@@ -25,6 +25,7 @@ app.use(function (req, res, next) {
     next();
 });
 
+app.options('*', cors())
 
 app.use(cors({
     'allowedHeaders': ['*','authorization', 'access-control-allow-origin', 'Access-Control-Allow-Origin' ,'Authorization', 'Content-Type'],
