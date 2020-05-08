@@ -8,7 +8,6 @@ const app = express()
 
 // Add headers
 app.use(function (req, res, next) {
-
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -28,7 +27,7 @@ app.use(function (req, res, next) {
 
 
 app.use(cors({
-    'allowedHeaders': ['authorization', 'access-control-allow-origin' ,'Authorization', 'Content-Type'],
+    'allowedHeaders': ['*','authorization', 'access-control-allow-origin' ,'Authorization', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
     'origin': 'https://supermoonn.herokuapp.com',
     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
