@@ -5,8 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import Galeria from '../../utils/components/galeria'
 import MaskedInput from 'react-text-mask'
 import Categoria from '../../utils/components/categoria'
-
-
+const altFormData = require('form-data')
 
 import api from '../../services/api'
 
@@ -113,15 +112,17 @@ export default function EditarMeuPerfil() {
             if (parts[1] === 'jpg' || parts[1] === 'png') {
                 const data = new FormData()
                 data.append('file', perfilFoto)
+                const data2 = new altFormData()
+                data2.append('file',perfilFoto, perfilFoto.name)
                 //alterar imagem
-                const response = await api.post('perfil/editar_perfil_image', data ,{
+                const response = await api.post('perfil/editar_perfil_image', data2 ,{
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
                         'Access-Control-Allow-Headers': 'Content-Type, Origin, Authorization',
                         Authorization: token,
                     },
-                    data
+                    
 
                 })
                 console.log(response)
