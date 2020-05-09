@@ -187,6 +187,7 @@ module.exports = {
         try {
             
                 form.parse(request, async function (err, fields, files) {
+                    console.log(files)
                     if (files) {
                         // se for foto
                         const fileName = files.file.name
