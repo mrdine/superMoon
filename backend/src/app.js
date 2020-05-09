@@ -22,13 +22,7 @@ app.use(function(req, res, next) {
   next();
 });
 */
-app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", '*');
-  res.setHeader("Access-Control-Allow-Credentials", false);
-  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.setHeader("Access-Control-Allow-Headers", '*');
-  next();
-});
+
 /*
 // Add headers
 app.use(function (req, res, next) {
