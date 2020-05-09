@@ -28,11 +28,11 @@ app.use(function (req, res, next) {
 
 
 app.use(cors({
-    'allowedHeaders': ['*','authorization', 'access-control-allow-origin', 'Access-Control-Allow-Origin' ,'Authorization', 'Content-Type'],
+    'allowedHeaders': ['authorization', 'access-control-allow-origin', 'Access-Control-Allow-Origin' ,'Authorization', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
     'origin': 'https://supermoonn.herokuapp.com',
     'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    'preflightContinue': false
+    'preflightContinue': true
   }))
 
 
