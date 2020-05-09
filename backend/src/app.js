@@ -4,7 +4,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 
 const app = express()
-
+/*
 app.use(cors({
   'allowedHeaders': ['authorization', 'access-control-allow-origin', 'Access-Control-Allow-Origin' ,'Authorization', 'Content-Type'],
   'exposedHeaders': ['Access-Control-Allow-Origin'],
@@ -12,7 +12,9 @@ app.use(cors({
   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   'preflightContinue': false
 }))
+*/
 
+app.use(cors({origin: '*'}))
 // Add headers
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
