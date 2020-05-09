@@ -114,7 +114,7 @@ export default function EditarMeuPerfil() {
                 const data = new FormData()
                 data.append('file', perfilFoto)
                 //alterar imagem
-                const response = await api.post('perfil/editar_perfil_image', data, {
+                const response = await api.post('perfil/editar_perfil_image', perfilFoto, {
                     headers: {
                         Authorization: token,
                     },
