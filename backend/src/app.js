@@ -13,6 +13,7 @@ app.use(cors({
   'preflightContinue': false
 }))
 */
+app.use(cors())
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
