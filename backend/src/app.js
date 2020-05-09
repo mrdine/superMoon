@@ -5,6 +5,13 @@ const cors = require('cors')
 
 const app = express()
 
+app.use(cors({
+  'allowedHeaders': ['authorization', 'access-control-allow-origin', 'Access-Control-Allow-Origin' ,'Authorization', 'Content-Type'],
+  'exposedHeaders': ['Access-Control-Allow-Origin'],
+  'origin': 'https://supermoonn.herokuapp.com',
+  'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  'preflightContinue': false
+}))
 
 // Add headers
 app.use(function (req, res, next) {
@@ -27,13 +34,7 @@ app.use(function (req, res, next) {
 
 
 
-app.use(cors({
-    'allowedHeaders': ['authorization', 'access-control-allow-origin', 'Access-Control-Allow-Origin' ,'Authorization', 'Content-Type'],
-    'exposedHeaders': ['Access-Control-Allow-Origin'],
-    'origin': 'https://supermoonn.herokuapp.com',
-    'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    'preflightContinue': false
-  }))
+
 
 
 
