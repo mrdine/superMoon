@@ -14,7 +14,13 @@ app.use(cors({
 }))
 */
 
-app.use(cors({origin: '*'}))
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+/*
 // Add headers
 app.use(function (req, res, next) {
     // Website you wish to allow to connect
@@ -34,7 +40,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-
+*/
 
 
 
