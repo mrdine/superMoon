@@ -123,9 +123,11 @@ export default function EditarMeuPerfil() {
                                 'Access-Control-Allow-Headers': 'Content-Type, Origin, Authorization',
                                 Authorization: token,
                             },
+                        }).then((response) => {
+                            console.log(response)
+                            window.location.reload(false);
                         })
                         
-                        window.location.reload(false);
                     } else {
                         alert('Escolha somente imagens com extensão.png ou .jpg por favor')
                         console.log(parts[1])
