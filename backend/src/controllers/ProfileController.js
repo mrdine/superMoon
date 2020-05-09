@@ -184,93 +184,97 @@ module.exports = {
         const newName = `${now}${randomN}.png`
 
         const form = formidable({ uploadDir: `${assetsUtils.assetsDir}/temp/imagesUploaded` })
-
         try {
-            form.parse(request, async function (err, fields, files) {
-                if (files) {
-                    // se for foto
-                    const fileName = files.file.name
-                    const parts = fileName.split('.')
-                    if (!parts.length === 2) {
-                        return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
-                    }
-
-                    const [nome, extensao] = parts
-                    if (extensao === 'png' || extensao === 'jpg') {
-                        // renomear foto antes de enviar pro bd
-                        const filepath = files.file.path
-                        const pathProvisorio = `${assetsUtils.assetsDir}/temp/imagesUploaded/resize${newName}`
-                        const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-
-                        await fs.rename(filepath, newpath, (err) => {
-                            if (err) {
-                                console.log(err, 'erro ao renomear arquivo')
-                                return response.status(401).send({ error: 'Erro, tente novamente' })
-                            }
+            try {
+                form.parse(request, async function (err, fields, files) {
+                    if (files) {
+                        // se for foto
+                        const fileName = files.file.name
+                        const parts = fileName.split('.')
+                        if (!parts.length === 2) {
+                            return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
+                        }
+    
+                        const [nome, extensao] = parts
+                        if (extensao === 'png' || extensao === 'jpg') {
+                            // renomear foto antes de enviar pro bd
+                            const filepath = files.file.path
+                            const pathProvisorio = `${assetsUtils.assetsDir}/temp/imagesUploaded/resize${newName}`
+                            const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
+    
+                            await fs.rename(filepath, newpath, (err) => {
+                                if (err) {
+                                    console.log(err, 'erro ao renomear arquivo')
+                                    return response.status(401).send({ error: 'Erro, tente novamente' })
+                                }
+                                try {
+                                    resizeImage(newpath, newpath)
+    
+                                } catch (error) {
+                                    console.log('Erro ao redimensionar imagem', error)
+                                }
+                            })
+    
+    
+    
                             try {
-                                resizeImage(newpath, newpath)
-
+    
+                                // primeiro ver se já nao tem imagem de perfil
+                                const imagens = await connection('imagens').select('perfil').where({
+                                    estabelecimento: email,
+                                    perfil: true
+                                })
+                                if (imagens.length > 0) {
+                                    await connection('imagens').where({
+                                        estabelecimento: email,
+                                        perfil: true
+                                    }).del()
+                                }
+                                // adicionar imagem no bd
+                                const binaryFile = await fileConverter.base64_encode(newName)
+                                await connection('imagens').insert({
+                                    perfil: true,
+                                    imagem: binaryFile,
+                                    estabelecimento: email
+                                })
+    
+    
+    
+    
                             } catch (error) {
-                                console.log('Erro ao redimensionar imagem', error)
+                                console.log(error, 'Erro ao inserir imagem')
+                                return response.status(401).send({ error: 'Tente novamente' })
                             }
-                        })
-
-
-
-                        try {
-
-                            // primeiro ver se já nao tem imagem de perfil
-                            const imagens = await connection('imagens').select('perfil').where({
+    
+                            // excluir imagem da past temp
+                            // excluir imagem não redimensionada
+                            //fs.unlinkSync(pathProvisorio)
+                            fs.unlinkSync(newpath)
+                            // Agora testar recuperar imagem do bd
+                            /*
+                            const imagess = await connection('imagens').select('imagem').where({
                                 estabelecimento: email,
                                 perfil: true
                             })
-                            if (imagens.length > 0) {
-                                await connection('imagens').where({
-                                    estabelecimento: email,
-                                    perfil: true
-                                }).del()
-                            }
-                            // adicionar imagem no bd
-                            const binaryFile = await fileConverter.base64_encode(newName)
-                            await connection('imagens').insert({
-                                perfil: true,
-                                imagem: binaryFile,
-                                estabelecimento: email
-                            })
-
-
-
-
-                        } catch (error) {
-                            console.log(error, 'Erro ao inserir imagem')
-                            return response.status(401).send({ error: 'Tente novamente' })
+                            const myimage = imagess[0]
+                            const binaryimage = myimage.imagem
+                            // decode binary data
+                            fileConverter.base64_decode(binaryimage, `daniel${newName}`)
+                            */
+                        } else {
+                            return response.status(401).send({ error: 'O arquivo deve ser uma imagem .jpg ou .png.' })
                         }
-
-                        // excluir imagem da past temp
-                        // excluir imagem não redimensionada
-                        //fs.unlinkSync(pathProvisorio)
-                        fs.unlinkSync(newpath)
-                        // Agora testar recuperar imagem do bd
-                        /*
-                        const imagess = await connection('imagens').select('imagem').where({
-                            estabelecimento: email,
-                            perfil: true
-                        })
-                        const myimage = imagess[0]
-                        const binaryimage = myimage.imagem
-                        // decode binary data
-                        fileConverter.base64_decode(binaryimage, `daniel${newName}`)
-                        */
-                    } else {
-                        return response.status(401).send({ error: 'O arquivo deve ser uma imagem .jpg ou .png.' })
                     }
-                }
-                response.send()
-            });
-
+                    response.send()
+                });
+    
+            } catch (error) {
+                console.log(error, 'Erro ao pegar arquivo enviado')
+            }
         } catch (error) {
-            console.log(error, 'Erro ao pegar arquivo enviado')
+            console.log(error)
         }
+        
 
 
     },

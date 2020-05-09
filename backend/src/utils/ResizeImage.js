@@ -10,9 +10,14 @@ const Jimp = require('jimp');
  * @param Number quality Optional number value of quality of the image e.g. 90.
  */
 module.exports = async function (filepath, newpath, width = 480, height = 270, quality = 90) {
+    try {
         const image = await Jimp.read
             (filepath);
         image.resize(width, height)
             .write(newpath);
+    } catch (error) {
+        console.log(error)
+    } 
+    
     }
 
