@@ -185,7 +185,7 @@ module.exports = {
 
         const form = formidable({ uploadDir: `${assetsUtils.assetsDir}/temp/imagesUploaded` })
         try {
-            try {
+            
                 form.parse(request, async function (err, fields, files) {
                     if (files) {
                         // se for foto
@@ -207,17 +207,15 @@ module.exports = {
                                     console.log(err, 'erro ao renomear arquivo')
                                     return response.status(401).send({ error: 'Erro, tente novamente' })
                                 }
-                                try {
+                                
                                     resizeImage(newpath, newpath)
     
-                                } catch (error) {
-                                    console.log('Erro ao redimensionar imagem', error)
-                                }
+                                 
                             })
     
     
     
-                            try {
+                            
     
                                 // primeiro ver se já nao tem imagem de perfil
                                 const imagens = await connection('imagens').select('perfil').where({
@@ -241,10 +239,7 @@ module.exports = {
     
     
     
-                            } catch (error) {
-                                console.log(error, 'Erro ao inserir imagem')
-                                return response.status(401).send({ error: 'Tente novamente' })
-                            }
+                            
     
                             // excluir imagem da past temp
                             // excluir imagem não redimensionada
@@ -268,9 +263,7 @@ module.exports = {
                     response.send()
                 });
     
-            } catch (error) {
-                console.log(error, 'Erro ao pegar arquivo enviado')
-            }
+            
         } catch (error) {
             console.log(error)
         }
