@@ -5,7 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import Galeria from '../../utils/components/galeria'
 import MaskedInput from 'react-text-mask'
 import Categoria from '../../utils/components/categoria'
-const altFormData = require('form-data')
+import altFormData from 'form-data'
 
 import api from '../../services/api'
 
