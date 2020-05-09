@@ -255,6 +255,8 @@ export default function EditarMeuPerfil() {
                 },
             })
 
+    
+
             console.log(response.statusText)
             history.push('/conta/perfil')
 
