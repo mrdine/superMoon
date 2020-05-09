@@ -42,7 +42,7 @@ routes.post('/perfil/editar', authMiddleware, ProfileController.editar)
 routes.options('/perfil/editar_perfil_image')
 routes.post('/perfil/editar_perfil_image', authMiddleware, ProfileController.editarImagePerfil)
 routes.options('/perfil/adicionar_fotos')
-routes.post('/perfil/adicionar_fotos', authMiddleware , ProfileController.adicionarFotos)
+routes.get('/perfil/adicionar_fotos', authMiddleware , ProfileController.adicionarFotos)
 routes.delete('/perfil/deletar_foto/:id', authMiddleware, ProfileController.deletarFoto)
 
 
