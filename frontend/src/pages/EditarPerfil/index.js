@@ -115,8 +115,13 @@ export default function EditarMeuPerfil() {
                 const data2 = new altFormData()
                 data2.append('file',perfilFoto, perfilFoto.name)
                 //alterar imagem
-                const response = await api.post('perfil/editar_perfil_image', data2 ,{
-                    headers: data2.getHeaders()
+                const response = await api.post('perfil/editar_perfil_image', data ,{
+                    headers: {
+                        "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
+                        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
+                        'Access-Control-Allow-Headers': 'Content-Type, Origin, Authorization',
+                        Authorization: token,
+                    },
                     
 
                 })

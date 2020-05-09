@@ -1,4 +1,6 @@
 const express = require('express')
+const multer = require('multer')
+let upload = multer()
 
 const EstController = require('./controllers/EstController')
 const SessionController = require('./controllers/SessionController')
@@ -40,7 +42,7 @@ routes.get('/perfil/editar', authMiddleware, ProfileController.indexEditar)
 routes.post('/perfil/editar', authMiddleware, ProfileController.editar)
 
 routes.options('/perfil/editar_perfil_image')
-routes.post('/perfil/editar_perfil_image', authMiddleware, ProfileController.editarImagePerfil)
+routes.post('/perfil/editar_perfil_image', upload.single('file') ,authMiddleware, ProfileController.editarImagePerfil)
 
 //routes.options('/perfil/adicionar_fotos')
 routes.post('/perfil/adicionar_fotos', authMiddleware , ProfileController.adicionarFotos)
