@@ -13,7 +13,7 @@ app.use(cors({
   'preflightContinue': false
 }))
 */
-app.use(cors())
+//app.use(cors())
 /*
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -22,7 +22,20 @@ app.use(function(req, res, next) {
   next();
 });
 */
-
+/*
+app.use(function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", '*');
+  res.setHeader("Access-Control-Allow-Credentials", false);
+  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.setHeader("Access-Control-Allow-Headers", '*');
+  next();
+});
+*/
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 /*
 // Add headers
 app.use(function (req, res, next) {
