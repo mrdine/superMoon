@@ -103,9 +103,7 @@ export default function EditarMeuPerfil() {
 
     async function handleMudarFotoPerfil(e) {
         e.preventDefault()
-        const string64 = await fileConverter.base64_encode(perfilFoto.name, perfilFoto.path)
-        console.log(string64)
-        /*
+        
                 console.log(perfilFoto)
                 if (!perfilFoto) {
                     alert('Escolha uma imagem antes de enviar')
@@ -114,22 +112,19 @@ export default function EditarMeuPerfil() {
                     let parts = perfilFoto.name.split('.')
                     if (parts[1] === 'jpg' || parts[1] === 'png') {
                         const data = new FormData()
-                        
                         data.append('file', perfilFoto)
                         const data2 = new altFormData()
                         data2.append('file',perfilFoto, perfilFoto.name)
                         //alterar imagem
-                        const response = await api.post('perfil/editar_perfil_image', data ,{
+                        api.post('perfil/editar_perfil_image', data ,{
                             headers: {
                                 "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
                                 'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
                                 'Access-Control-Allow-Headers': 'Content-Type, Origin, Authorization',
                                 Authorization: token,
                             },
-                            
-        
                         })
-                        console.log(response)
+                        
                         window.location.reload(false);
                     } else {
                         alert('Escolha somente imagens com extensão.png ou .jpg por favor')
@@ -137,7 +132,7 @@ export default function EditarMeuPerfil() {
                         return
                     }
                 }
-                */
+                
     }
 
     function alterarCategoria(categoria) {
