@@ -118,11 +118,9 @@ export default function EditarMeuPerfil() {
                         //alterar imagem
                         api.post('perfil/editar_perfil_image', data ,{
                             headers: {
-                                "Content-Type": `multipart/form-data; boundary=${data._boundary}`,
-                                'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT, DELETE',
-                                'Access-Control-Allow-Headers': 'Content-Type, Origin, Authorization',
-                                Authorization: token,
+                               Authorization: token,
                             },
+                            
                         }).then((response) => {
                             console.log(response)
                             window.location.reload(false);
