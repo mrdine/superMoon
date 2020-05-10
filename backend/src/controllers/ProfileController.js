@@ -175,8 +175,9 @@ module.exports = {
     },
 
     async editarImagePerfil(request, response) {
-        
-
+        console.log("cheguei aqui")
+        response.send()
+/*
         const email = request.estEmail
         // DEFINIR A IMAGEM DE PERFIL
         const now = Date.now()
@@ -247,16 +248,7 @@ module.exports = {
                             //fs.unlinkSync(pathProvisorio)
                             fs.unlinkSync(newpath)
                             // Agora testar recuperar imagem do bd
-                            /*
-                            const imagess = await connection('imagens').select('imagem').where({
-                                estabelecimento: email,
-                                perfil: true
-                            })
-                            const myimage = imagess[0]
-                            const binaryimage = myimage.imagem
-                            // decode binary data
-                            fileConverter.base64_decode(binaryimage, `daniel${newName}`)
-                            */
+                           
                         } else {
                             return response.status(401).send({ error: 'O arquivo deve ser uma imagem .jpg ou .png.' })
                         }
@@ -270,7 +262,7 @@ module.exports = {
         }
         
 
-
+*/
     },
 
     // DEVE TER UMA FUNÇÃO/ROTA SÓ PARA INSERIR E PARA DELETAR IMAGENS
