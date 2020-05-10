@@ -184,7 +184,7 @@ module.exports = {
         }
 
         try {
-            // criar arquivo recebido
+        // criar arquivo recebido
         let firstpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/`
         const now = Date.now()
         const randomN = randomNumber.getRandomInt(0, 7777)

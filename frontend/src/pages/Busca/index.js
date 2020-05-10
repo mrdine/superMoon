@@ -154,7 +154,7 @@ export default function Busca() {
                                         <Link to={`/${estabelecimento.apelido}`}>
                                         <div className='panel panel-primary'>
                                             <div className="panel-heading text-center">{estabelecimento.nome}</div>
-                                            <img className="objetoImage" src={`data:image${estabelecimento.apelido}/jpeg;base64,${estabelecimento.imagem}`} className="img-responsive" style={{ width: '100%' }} />
+                                            <img className="objetoImage" src={`data:image${estabelecimento.apelido}/jpeg;base64,${estabelecimento.imagem}`} className="img-responsive" style={{ width: '100%'}} />
                                         </div>
                                         </Link>
                                         
