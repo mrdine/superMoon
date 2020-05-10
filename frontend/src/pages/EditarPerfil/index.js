@@ -108,8 +108,9 @@ export default function EditarMeuPerfil() {
         function getBase64(file, callback) {
             let reader = new FileReader()
             reader.readAsDataURL(file)
-            reader.onload = function () {
-                callback(reader.result)
+            reader.onload = async function () {
+                const resized = await utils.resizeImage(reader.result, 480, 270);
+                callback(resized)
             }
             reader.onerror = (error) => { console.log('Error: ', error) }
         }

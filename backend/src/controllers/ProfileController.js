@@ -184,6 +184,8 @@ module.exports = {
         }
 
         try {
+        // Não vou mais redimensionar a imagem aqui
+            /*
         // criar arquivo recebido
         let firstpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/`
         const now = Date.now()
@@ -198,6 +200,8 @@ module.exports = {
            console.log( error) 
            console.log('Erro ao redimensionar arquivo', error) 
         }
+
+        */
         // primeiro ver se já nao tem imagem de perfil
         const imagens = await connection('imagens').select('perfil').where({
             estabelecimento: email,
@@ -211,15 +215,15 @@ module.exports = {
         }
         // inserir no banco de dados
 
-        const binaryFile = await fileConverter.base64_encode(newName)
+        //const binaryFile = await fileConverter.base64_encode(newName)
         await connection('imagens').insert({
             perfil: true,
-            imagem: binaryFile,
+            imagem: file,
             estabelecimento: email
         })
 
         // excluir imagem
-        fs.unlinkSync(`${firstpath}${newName}`)
+        //fs.unlinkSync(`${firstpath}${newName}`)
 
         response.send()
 
