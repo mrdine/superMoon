@@ -104,7 +104,23 @@ export default function EditarMeuPerfil() {
 
     async function handleMudarFotoPerfil(e) {
         e.preventDefault()
+        const data = new FormData()
+                data.append('file', perfilFoto)
+                const data2 = new altFormData()
+                data2.append('file', perfilFoto, perfilFoto.name)
+                //alterar imagem
+                api.post('/perfil/trocar_foto_perfil', data, {
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                        Authorization: token,
+                    },
 
+                }).then((response) => {
+                    console.log(response)
+                    window.location.reload(false);
+                })
+                
+/*
         console.log(perfilFoto)
         if (!perfilFoto) {
             alert('Escolha uma imagem antes de enviar')
@@ -134,7 +150,7 @@ export default function EditarMeuPerfil() {
                 return
             }
         }
-
+*/
     }
 
     function alterarCategoria(categoria) {
