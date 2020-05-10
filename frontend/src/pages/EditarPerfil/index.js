@@ -117,7 +117,7 @@ export default function EditarMeuPerfil() {
                 const data2 = new altFormData()
                 data2.append('file', perfilFoto)
                 //alterar imagem
-                api.post('/perfil/trocar_foto_perfil', data2, {
+                api.post('/perfil/trocar_foto_perfil', data, {
                     headers: {
                         'content-type': 'multipart/form-data',
                         Authorization: token,
