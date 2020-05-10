@@ -117,7 +117,7 @@ export default function EditarMeuPerfil() {
         let base64file = ''
         getBase64(perfilFoto, (result) => {
             base64file = result
-            console.log(base64file)
+            //console.log(base64file)
         })
         console.log(base64file)
 
