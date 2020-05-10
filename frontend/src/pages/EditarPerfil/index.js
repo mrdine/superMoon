@@ -102,8 +102,7 @@ export default function EditarMeuPerfil() {
 
     }, [token])
 
-    async function handleMudarFotoPerfil(e) {
-        e.preventDefault()
+    async function handleMudarFotoPerfil() {
 
         console.log(perfilFoto)
         if (!perfilFoto) {
@@ -282,10 +281,10 @@ export default function EditarMeuPerfil() {
                         <div className="well">
                             <p><Link to='/conta/perfil/editar'><a>Alterar imagem de perfil</a></Link>
                             </p>
-                            <form onSubmit={(e) => { handleMudarFotoPerfil(e) }} enctype="multipart/form-data">
+                            <form enctype="multipart/form-data">
                                 <div id='alterarFotoPerfil' class="form-group">
                                     <input type="file" class="form-control form-control-sm" onChange={(e) => { setPerfilFoto(e.target.files[0]) }} id="exampleFormControlFile1" />
-                                    <button id="botaoPerfilFoto" class="btn btn-primary mb-2">Enviar Foto</button>
+                                    <button id="botaoPerfilFoto" onClick={handleMudarFotoPerfil} class="btn btn-primary mb-2">Enviar Foto</button>
                                 </div>
                             </form>
 
