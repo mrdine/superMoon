@@ -103,36 +103,37 @@ export default function EditarMeuPerfil() {
 
     async function handleMudarFotoPerfil(e) {
         e.preventDefault()
-        
-                console.log(perfilFoto)
-                if (!perfilFoto) {
-                    alert('Escolha uma imagem antes de enviar')
-                    return
-                } else {
-                    let parts = perfilFoto.name.split('.')
-                    if (parts[1] === 'jpg' || parts[1] === 'png') {
-                        const data = new FormData()
-                        data.append('file', perfilFoto)
-                        const data2 = new altFormData()
-                        data2.append('file',perfilFoto, perfilFoto.name)
-                        //alterar imagem
-                        api.post('/perfil/trocar_foto_perfil', {bla: 'oi'} ,{
-                            headers: {
-                               Authorization: token,
-                            },
-                            
-                        }).then((response) => {
-                            console.log(response)
-                            window.location.reload(false);
-                        })
-                        
-                    } else {
-                        alert('Escolha somente imagens com extensão.png ou .jpg por favor')
-                        console.log(parts[1])
-                        return
-                    }
-                }
-                
+
+        console.log(perfilFoto)
+        if (!perfilFoto) {
+            alert('Escolha uma imagem antes de enviar')
+            return
+        } else {
+            let parts = perfilFoto.name.split('.')
+            if (parts[1] === 'jpg' || parts[1] === 'png') {
+                const data = new FormData()
+                data.append('file', perfilFoto)
+                const data2 = new altFormData()
+                data2.append('file', perfilFoto, perfilFoto.name)
+                //alterar imagem
+                api.post('/perfil/trocar_foto_perfil', data, {
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                        Authorization: token,
+                    },
+
+                }).then((response) => {
+                    console.log(response)
+                    window.location.reload(false);
+                })
+
+            } else {
+                alert('Escolha somente imagens com extensão.png ou .jpg por favor')
+                console.log(parts[1])
+                return
+            }
+        }
+
     }
 
     function alterarCategoria(categoria) {
