@@ -5,7 +5,7 @@ pg.defaults.ssl = true
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 module.exports = {
-  
+  /*
     development: {
       client: 'sqlite3',
       connection: {
@@ -16,7 +16,20 @@ module.exports = {
       },
       useNullAsDefault: true,
     },
-  
+  */
+ development: {
+  client: 'mysql',
+  connection: {
+    host:'mysql669.umbler.com:41890',
+    user:'mrdine',
+    password:'ninja123',
+    database:'supermoondb'
+  },
+  migrations: {
+    directory: './src/database/migrations'
+  },
+  useNullAsDefault: true,
+},
 /*
   development: {
     client: 'pg',
