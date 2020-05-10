@@ -105,6 +105,23 @@ export default function EditarMeuPerfil() {
     async function handleMudarFotoPerfil(e) {
         e.preventDefault()
 
+        function getBase64(file, callback) {
+            let reader = new FileReader()
+            reader.readAsDataURL(file)
+            reader.onload = function() {
+                callback(reader.result)
+            }
+            reader.onerror = (error) => {console.log('Error: ', error)}
+        }
+
+        let base64file = ''
+        getBase64(perfilFoto, (result) => {
+            base64file = result
+            console.log(base64file)
+        })
+        console.log(base64file)
+
+
         console.log(perfilFoto)
         if (!perfilFoto) {
             alert('Escolha uma imagem antes de enviar')
@@ -121,6 +138,7 @@ export default function EditarMeuPerfil() {
                     headers: {
                         'content-type': 'multipart/form-data',
                         Authorization: token,
+                        
                     },
 
                 }).then((response) => {
