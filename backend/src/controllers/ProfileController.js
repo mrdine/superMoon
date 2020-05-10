@@ -175,7 +175,8 @@ module.exports = {
     },
 
     async editarImagePerfil(request, response) {
-        console.log("cheguei aqui")
+        const {file, name} = request.body
+        console.log(name)
         response.send()
 /*
         const email = request.estEmail

@@ -118,10 +118,37 @@ export default function EditarMeuPerfil() {
         getBase64(perfilFoto, (result) => {
             base64file = result
             //console.log(base64file)
+            const parts = base64file.split(',')
+            const file = parts[1]
+
+            // verificar se o usuario enviou imagem
+            let partsImage = perfilFoto.name.split('.')
+            if(partsImage[1] !== 'jpg' && partsImage[1] !== 'png') {
+                alert('Escolha somente imagens de extensão .jpg e .png')
+                return
+            }
+
+            // enviar
+            const data = {
+                file: file,
+                name: perfilFoto.name
+            }
+
+            api.post('/perfil/trocar_foto_perfil', data, {
+                headers: {
+                    Authorization: token,
+                },
+
+            }).then((response) => {
+                console.log(response)
+                window.location.reload(false);
+            }).catch((error) => {
+                console.log(error)
+            })
+
         })
-        console.log(base64file)
 
-
+        /*
         console.log(perfilFoto)
         if (!perfilFoto) {
             alert('Escolha uma imagem antes de enviar')
@@ -154,6 +181,7 @@ export default function EditarMeuPerfil() {
                 return
             }
         }
+        */
 
     }
 
