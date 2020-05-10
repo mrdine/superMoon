@@ -104,23 +104,7 @@ export default function EditarMeuPerfil() {
 
     async function handleMudarFotoPerfil(e) {
         e.preventDefault()
-        const data = new FormData()
-                data.append('file', perfilFoto)
-                const data2 = new altFormData()
-                data2.append('file', perfilFoto, perfilFoto.name)
-                //alterar imagem
-                api.post('/perfil/trocar_foto_perfil', data, {
-                    headers: {
-                        'content-type': 'multipart/form-data',
-                        Authorization: token,
-                    },
 
-                }).then((response) => {
-                    console.log(response)
-                    window.location.reload(false);
-                })
-                
-/*
         console.log(perfilFoto)
         if (!perfilFoto) {
             alert('Escolha uma imagem antes de enviar')
@@ -129,11 +113,11 @@ export default function EditarMeuPerfil() {
             let parts = perfilFoto.name.split('.')
             if (parts[1] === 'jpg' || parts[1] === 'png') {
                 const data = new FormData()
-                data.append('file', perfilFoto)
+                data.append('file', perfilFoto, perfilFoto.name)
                 const data2 = new altFormData()
-                data2.append('file', perfilFoto, perfilFoto.name)
+                data2.append('file', perfilFoto)
                 //alterar imagem
-                api.post('/perfil/trocar_foto_perfil', data, {
+                api.post('/perfil/trocar_foto_perfil', data2, {
                     headers: {
                         'content-type': 'multipart/form-data',
                         Authorization: token,
@@ -150,7 +134,7 @@ export default function EditarMeuPerfil() {
                 return
             }
         }
-*/
+
     }
 
     function alterarCategoria(categoria) {
@@ -298,7 +282,7 @@ export default function EditarMeuPerfil() {
                             </p>
                             <form onSubmit={(e) => { handleMudarFotoPerfil(e) }} enctype="multipart/form-data">
                                 <div id='alterarFotoPerfil' class="form-group">
-                                    <input type="file" class="form-control form-control-sm" onChange={(e) => { setPerfilFoto(e.target.files) }} id="exampleFormControlFile1" />
+                                    <input type="file" class="form-control form-control-sm" onChange={(e) => { setPerfilFoto(e.target.files[0]) }} id="exampleFormControlFile1" />
                                     <button id="botaoPerfilFoto" class="btn btn-primary mb-2">Enviar Foto</button>
                                 </div>
                             </form>
