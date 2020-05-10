@@ -14,6 +14,7 @@ import api from '../../services/api'
 
 import utils from '../../utils'
 import './styles.css'
+import { FiDatabase } from 'react-icons/fi'
 
 
 
@@ -113,6 +114,7 @@ export default function EditarMeuPerfil() {
             if (parts[1] === 'jpg' || parts[1] === 'png') {
                 const data = new FormData()
                 data.append('file', perfilFoto)
+                data.append('nome', 'oi')
                 const data2 = new altFormData()
                 data2.append('file', perfilFoto, perfilFoto.name)
                 //alterar imagem
