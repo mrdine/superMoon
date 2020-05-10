@@ -14,13 +14,17 @@ app.use(cors({
 }))
 
 //app.use(cors())
+try {
+  app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "*")
+    next();
+  });
+} catch (error) {
+  console.log(error)
+}
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header("Access-Control-Allow-Methods", "*")
-  next();
-});
 
 /*
 app.use(function(req, res, next) {
