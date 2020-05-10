@@ -113,7 +113,7 @@ export default function EditarMeuPerfil() {
             let parts = perfilFoto.name.split('.')
             if (parts[1] === 'jpg' || parts[1] === 'png') {
                 const data = new FormData()
-                data.append('file', perfilFoto, perfilFoto.name)
+                data.append('file', perfilFoto)
                 const data2 = new altFormData()
                 data2.append('file', perfilFoto, perfilFoto.name)
                 //alterar imagem
