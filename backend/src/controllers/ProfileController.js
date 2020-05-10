@@ -191,7 +191,13 @@ module.exports = {
         const newName = `${now}${randomN}.png`
         await fileConverter.base64_decode(file, newName, firstpath)
         // redimensionar ele
-        resizeImage(firstpath, firstpath)
+        try {
+            resizeImage(`${firstpath}${newName}`, `${firstpath}${newName}`)
+            
+        } catch (error) {
+           console.log( error) 
+           console.log('Erro ao redimensionar arquivo', error) 
+        }
         // primeiro ver se já nao tem imagem de perfil
         const imagens = await connection('imagens').select('perfil').where({
             estabelecimento: email,
@@ -313,123 +319,19 @@ module.exports = {
     // DEVE TER UMA FUNÇÃO/ROTA SÓ PARA INSERIR E PARA DELETAR IMAGENS
     async adicionarFotos(request, response) {
         const email = request.estEmail
-
-
-        const form = formidable({
-            multiples: true,
-            uploadDir: `${assetsUtils.assetsDir}/temp/imagesUploaded`
-        })
-
-        try {
-            form.parse(request, async function (err, fields, files) {
-                let arquivos = files
-                // se for mais que uma imagem
-                if (files.file.name === undefined) {
-                    arquivos = files.file
-                    arquivos.forEach(async (arquivo) => {
-                        // verificar se arquivo é uma imagem
-                        const fileNome = arquivo.name
-
-                        const parts = fileNome.split('.')
-                        if (!parts.length === 2) {
-                            return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
-                        }
-
-                        const [nome, extensao] = parts
-                        if (extensao === 'png' || extensao === 'jpg') {
-                            // renomear imagem
-                            let now = Date.now()
-                            let randomN = randomNumber.getRandomInt(0, 7777)
-                            let newName = `${now}${randomN}.png`
-
-                            const filepath = arquivo.path
-                            const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-                            fs.rename(filepath, newpath, async (err) => {
-                                if (err) {
-                                    console.log(err, 'erro ao renomear arquivo')
-                                    return response.status(401).send({ error: 'Erro, tente novamente' })
-                                }
-
-                                // redimensionar imagem para 480x270
-                                //await resizeImage([newpath], 480, 270)
-                                //resizeImage.resizeImage2(newpath)
-
-                                // adicionar imagem no bd
-                                const binaryFile = await fileConverter.base64_encode(newName)
-                                await connection('imagens').insert({
-                                    perfil: false,
-                                    imagem: binaryFile,
-                                    estabelecimento: email
-                                })
-                                // excluir imagem da past temp
-                                fs.unlinkSync(newpath)
-                                return response.send()
-
-                            })
-
-
-                        } else {
-                            return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
-                        }
-
-
-
-
-
-                    })
-                }
-                // se for só uma imagem
-                else {
-                    // verificar se arquivo é uma imagem
-                    const fileNome = arquivos.file.name
-                    const parts = fileNome.split('.')
-                    if (!parts.length === 2) {
-                        return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
-                    }
-
-                    const [nome, extensao] = parts
-                    if (extensao === 'png' || extensao === 'jpg') {
-                        // renomear imagem
-                        let now = Date.now()
-                        let randomN = randomNumber.getRandomInt(0, 7777)
-                        let newName = `${now}${randomN}.png`
-
-                        const filepath = arquivos.file.path
-                        const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-                        fs.rename(filepath, newpath, async (err) => {
-                            if (err) {
-                                console.log(err, 'erro ao renomear arquivo')
-                                return response.status(401).send({ error: 'Erro, tente novamente' })
-                            }
-
-                            const binaryFile = await fileConverter.base64_encode(newName)
-                            // adicionar imagem no bd
-
-
-                            await connection('imagens').insert({
-                                perfil: false,
-                                imagem: binaryFile,
-                                estabelecimento: email
-                            })
-                            // excluir imagem da past temp
-                            fs.unlinkSync(newpath)
-
-                            return response.send()
-                        })
-
-
-
-                    } else {
-                        return response.status(401).send({ error: 'Insira somente imagens .png ou .jpg' })
-                    }
-
-                }
-            })
-        } catch (error) {
-            console.log(error, 'Erro ao tentar pegar arquivos enviados')
-            response.status(401).send({ erro: 'Erro, tente novamente' })
+        const {file, name} = request.body
+        // verificar se é mesmo uma imagem
+        const partsImage = name.split('.')
+        if (partsImage[1] !== 'jpg' && partsImage[1] !== 'png') {
+            response.send()
         }
-
+        // adicionar no bd
+        await connection('imagens').insert({
+            perfil: false,
+            imagem: file,
+            estabelecimento: email
+        })
+        
         response.send()
 
     },

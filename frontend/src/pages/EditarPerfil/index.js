@@ -108,10 +108,10 @@ export default function EditarMeuPerfil() {
         function getBase64(file, callback) {
             let reader = new FileReader()
             reader.readAsDataURL(file)
-            reader.onload = function() {
+            reader.onload = function () {
                 callback(reader.result)
             }
-            reader.onerror = (error) => {console.log('Error: ', error)}
+            reader.onerror = (error) => { console.log('Error: ', error) }
         }
 
         let base64file = ''
@@ -123,7 +123,7 @@ export default function EditarMeuPerfil() {
 
             // verificar se o usuario enviou imagem
             let partsImage = perfilFoto.name.split('.')
-            if(partsImage[1] !== 'jpg' && partsImage[1] !== 'png') {
+            if (partsImage[1] !== 'jpg' && partsImage[1] !== 'png') {
                 alert('Escolha somente imagens de extensão .jpg e .png')
                 return
             }
@@ -141,7 +141,7 @@ export default function EditarMeuPerfil() {
 
             }).then((response) => {
                 console.log(response)
-                //window.location.reload(false);
+                window.location.reload(false);
             }).catch((error) => {
                 console.log(error)
             })
@@ -282,11 +282,65 @@ export default function EditarMeuPerfil() {
 
     }
 
-    async function handleAdicionarFotosG() {
+    async function handleAdicionarFotosG(e) {
         if (fotosG === null) {
             alert('Selecione ao menos uma foto')
             return
         } else {
+            e.preventDefault()
+
+            function getBase64(file, callback) {
+                let reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = function () {
+                    callback(reader.result)
+                }
+                reader.onerror = (error) => { console.log('Error: ', error) }
+            }
+            let imagens = []
+            for (let i = 0; i < fotosG.length; i++) {
+                imagens[i] = fotosG[i]
+            }
+
+            imagens.forEach((foto, index) => {
+                let base64file = ''
+                getBase64(foto, (result) => {
+                    base64file = result
+                    //console.log(base64file)
+                    const parts = base64file.split(',')
+                    const file = parts[1]
+
+                    // verificar se o usuario enviou imagem
+                    let partsImage = foto.name.split('.')
+                    if (partsImage[1] !== 'jpg' && partsImage[1] !== 'png') {
+                        alert('Escolha somente imagens de extensão .jpg e .png')
+                    } else {
+                        // enviar
+                    const data = {
+                        file: file,
+                        name: foto.name
+                    }
+
+                    api.post('/perfil/adicionar_fotos', data, {
+                        headers: {
+                            Authorization: token,
+                        },
+
+                    }).then((response) => {
+                        console.log(response)
+                        if(index === imagens.length - 1) {
+                            window.location.reload(false);
+                        }
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                    }
+
+                    
+
+                })
+            })
+            /*
             console.log(fotosG)
             const data = new FormData()
             for (let counter = 0; counter < fotosG.length; counter++) {
@@ -312,7 +366,8 @@ export default function EditarMeuPerfil() {
 
             console.log(response.statusText)
             history.push('/conta/perfil')
-
+            
+            */
         }
     }
 
