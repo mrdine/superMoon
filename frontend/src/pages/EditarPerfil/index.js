@@ -282,7 +282,7 @@ export default function EditarMeuPerfil() {
                             </p>
                             <form onSubmit={(e) => { handleMudarFotoPerfil(e) }} enctype="multipart/form-data">
                                 <div id='alterarFotoPerfil' class="form-group">
-                                    <input type="file" class="form-control form-control-sm" onChange={(e) => { setPerfilFoto(e.target.files[0]) }} id="exampleFormControlFile1" />
+                                    <input type="file" class="form-control form-control-sm" onChange={(e) => { setPerfilFoto(e.target.files) }} id="exampleFormControlFile1" />
                                     <button id="botaoPerfilFoto" class="btn btn-primary mb-2">Enviar Foto</button>
                                 </div>
                             </form>
