@@ -18,10 +18,10 @@ module.exports = {
     },
 
     //Convertendo binario em arquivo
-    base64_decode (base64str, fileName, path = `${assetsUtils.assetsDir}/temp/imagesToSend/` ) {
+    async base64_decode (base64str, fileName, path = `${assetsUtils.assetsDir}/temp/imagesToSend/` ) {
         try {
             const bitmap = new Buffer.from(base64str, 'base64');
-            fs.writeFileSync(`${path}${fileName}`, bitmap, 'binary', function (err) {
+            await fs.writeFileSync(`${path}${fileName}`, bitmap, 'binary', function (err) {
             if (err) {
                 console.log(erro, 'Conversao de arquivo com erro');
             }

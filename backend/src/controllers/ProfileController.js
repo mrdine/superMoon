@@ -55,7 +55,7 @@ module.exports = {
         }
 
         const estabelecimento = await connection('estabelecimentos').select('email').where('apelido', apelido).first()
-        
+
         const email = estabelecimento.email
         if (!email) {
             return response.status(401).send('Insira email')
@@ -175,95 +175,139 @@ module.exports = {
     },
 
     async editarImagePerfil(request, response) {
-        const {file, name} = request.body
-        console.log(name)
-        response.send()
-/*
         const email = request.estEmail
-        // DEFINIR A IMAGEM DE PERFIL
+        const { file, name } = request.body
+        // verificar se é mesmo uma imagem
+        const partsImage = name.split('.')
+        if (partsImage[1] !== 'jpg' && partsImage[1] !== 'png') {
+            response.send()
+        }
+
+        try {
+            // criar arquivo recebido
+        let firstpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/`
         const now = Date.now()
         const randomN = randomNumber.getRandomInt(0, 7777)
         const newName = `${now}${randomN}.png`
+        await fileConverter.base64_decode(file, newName, firstpath)
+        // redimensionar ele
+        resizeImage(firstpath, firstpath)
+        // primeiro ver se já nao tem imagem de perfil
+        const imagens = await connection('imagens').select('perfil').where({
+            estabelecimento: email,
+            perfil: true
+        })
+        if (imagens.length > 0) {
+            await connection('imagens').where({
+                estabelecimento: email,
+                perfil: true
+            }).del()
+        }
+        // inserir no banco de dados
 
-        const form = formidable({ uploadDir: `${assetsUtils.assetsDir}/temp/imagesUploaded` })
-        try {
-            
-                form.parse(request, async function (err, fields, files) {
-                    console.log(files)
-                    if (files) {
-                        // se for foto
-                        const fileName = files.file.name
-                        const parts = fileName.split('.')
-                        if (!parts.length === 2) {
-                            return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
-                        }
-    
-                        const [nome, extensao] = parts
-                        if (extensao === 'png' || extensao === 'jpg') {
-                            // renomear foto antes de enviar pro bd
-                            const filepath = files.file.path
-                            const pathProvisorio = `${assetsUtils.assetsDir}/temp/imagesUploaded/resize${newName}`
-                            const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
-    
-                            await fs.rename(filepath, newpath, (err) => {
-                                if (err) {
-                                    console.log(err, 'erro ao renomear arquivo')
-                                    return response.status(401).send({ error: 'Erro, tente novamente' })
-                                }
-                                
-                                    resizeImage(newpath, newpath)
-    
-                                 
-                            })
-    
-    
-    
-                            
-    
-                                // primeiro ver se já nao tem imagem de perfil
-                                const imagens = await connection('imagens').select('perfil').where({
-                                    estabelecimento: email,
-                                    perfil: true
-                                })
-                                if (imagens.length > 0) {
-                                    await connection('imagens').where({
-                                        estabelecimento: email,
-                                        perfil: true
-                                    }).del()
-                                }
-                                // adicionar imagem no bd
-                                const binaryFile = await fileConverter.base64_encode(newName)
-                                await connection('imagens').insert({
-                                    perfil: true,
-                                    imagem: binaryFile,
-                                    estabelecimento: email
-                                })
-    
-    
-    
-    
-                            
-    
-                            // excluir imagem da past temp
-                            // excluir imagem não redimensionada
-                            //fs.unlinkSync(pathProvisorio)
-                            fs.unlinkSync(newpath)
-                            // Agora testar recuperar imagem do bd
-                           
-                        } else {
-                            return response.status(401).send({ error: 'O arquivo deve ser uma imagem .jpg ou .png.' })
-                        }
-                    }
-                    response.send()
-                });
-    
-            
+        const binaryFile = await fileConverter.base64_encode(newName)
+        await connection('imagens').insert({
+            perfil: true,
+            imagem: binaryFile,
+            estabelecimento: email
+        })
+
+        // excluir imagem
+        fs.unlinkSync(`${firstpath}${newName}`)
+
+        response.send()
+
         } catch (error) {
-            console.log(error)
+         console.log(error)
+         return response.status(401).send({ error: 'Tente novamente.' })   
         }
         
-
-*/
+        /*
+                const email = request.estEmail
+                // DEFINIR A IMAGEM DE PERFIL
+                const now = Date.now()
+                const randomN = randomNumber.getRandomInt(0, 7777)
+                const newName = `${now}${randomN}.png`
+        
+                const form = formidable({ uploadDir: `${assetsUtils.assetsDir}/temp/imagesUploaded` })
+                try {
+                    
+                        form.parse(request, async function (err, fields, files) {
+                            console.log(files)
+                            if (files) {
+                                // se for foto
+                                const fileName = files.file.name
+                                const parts = fileName.split('.')
+                                if (!parts.length === 2) {
+                                    return response.status(401).send({ error: 'O nome do arquivo não deve conter caracteres especiais.' })
+                                }
+            
+                                const [nome, extensao] = parts
+                                if (extensao === 'png' || extensao === 'jpg') {
+                                    // renomear foto antes de enviar pro bd
+                                    const filepath = files.file.path
+                                    const pathProvisorio = `${assetsUtils.assetsDir}/temp/imagesUploaded/resize${newName}`
+                                    const newpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/${newName}`
+            
+                                    await fs.rename(filepath, newpath, (err) => {
+                                        if (err) {
+                                            console.log(err, 'erro ao renomear arquivo')
+                                            return response.status(401).send({ error: 'Erro, tente novamente' })
+                                        }
+                                        
+                                            resizeImage(newpath, newpath)
+            
+                                         
+                                    })
+            
+            
+            
+                                    
+            
+                                        // primeiro ver se já nao tem imagem de perfil
+                                        const imagens = await connection('imagens').select('perfil').where({
+                                            estabelecimento: email,
+                                            perfil: true
+                                        })
+                                        if (imagens.length > 0) {
+                                            await connection('imagens').where({
+                                                estabelecimento: email,
+                                                perfil: true
+                                            }).del()
+                                        }
+                                        // adicionar imagem no bd
+                                        const binaryFile = await fileConverter.base64_encode(newName)
+                                        await connection('imagens').insert({
+                                            perfil: true,
+                                            imagem: binaryFile,
+                                            estabelecimento: email
+                                        })
+            
+            
+            
+            
+                                    
+            
+                                    // excluir imagem da past temp
+                                    // excluir imagem não redimensionada
+                                    //fs.unlinkSync(pathProvisorio)
+                                    fs.unlinkSync(newpath)
+                                    // Agora testar recuperar imagem do bd
+                                   
+                                } else {
+                                    return response.status(401).send({ error: 'O arquivo deve ser uma imagem .jpg ou .png.' })
+                                }
+                            }
+                            response.send()
+                        });
+            
+                    
+                } catch (error) {
+                    console.log(error)
+                }
+                
+        
+        */
     },
 
     // DEVE TER UMA FUNÇÃO/ROTA SÓ PARA INSERIR E PARA DELETAR IMAGENS
@@ -422,5 +466,5 @@ module.exports = {
 
     }
 
-    
+
 }

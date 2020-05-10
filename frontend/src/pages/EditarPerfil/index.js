@@ -141,7 +141,7 @@ export default function EditarMeuPerfil() {
 
             }).then((response) => {
                 console.log(response)
-                window.location.reload(false);
+                //window.location.reload(false);
             }).catch((error) => {
                 console.log(error)
             })
