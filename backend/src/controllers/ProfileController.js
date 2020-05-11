@@ -26,14 +26,23 @@ module.exports = {
             .where('estabelecimento', email)
             .first()
 
-        estabelecimento.myImages = await connection('imagens')
+            let fotos = await connection('imagens')
             .select('id', 'imagem', 'perfil')
             .where({ estabelecimento: estabelecimento.email, perfil: false })
+
+        fotos.forEach(async (foto, index) => {
+            foto.imagem = await new Buffer.from(foto.imagem).toString()
+        })
+
+        estabelecimento.myImages = fotos
+        console.log(fotos)
 
         estabelecimento.myPerfilImage = await connection('imagens')
             .select('imagem')
             .where({ estabelecimento: email, perfil: true }).first()
 
+
+        estabelecimento.myPerfilImage.imagem = await new Buffer.from(estabelecimento.myPerfilImage.imagem).toString();
 
         response.send(estabelecimento)
     },
@@ -86,13 +95,22 @@ module.exports = {
             .where('estabelecimento', estabelecimento.email)
             .first()
 
-        estabelecimento.myImages = await connection('imagens')
+        let fotos = await connection('imagens')
             .select('id', 'imagem', 'perfil')
             .where({ estabelecimento: estabelecimento.email, perfil: false })
+
+        fotos.forEach(async (foto, index) => {
+            foto.imagem = await new Buffer.from(foto.imagem).toString()
+        })
+
+        estabelecimento.myImages = fotos
+        console.log(fotos)
 
         estabelecimento.myPerfilImage = await connection('imagens')
             .select('imagem')
             .where({ estabelecimento: estabelecimento.email, perfil: true }).first()
+
+        estabelecimento.myPerfilImage.imagem = await new Buffer.from(estabelecimento.myPerfilImage.imagem).toString();
 
 
         response.send(estabelecimento)
@@ -184,7 +202,7 @@ module.exports = {
         }
 
         try {
-        // Não vou mais redimensionar a imagem aqui
+            // Não vou mais redimensionar a imagem aqui
             /*
         // criar arquivo recebido
         let firstpath = `${assetsUtils.assetsDir}/temp/imagesUploaded/`
@@ -202,36 +220,36 @@ module.exports = {
         }
 
         */
-        // primeiro ver se já nao tem imagem de perfil
-        const imagens = await connection('imagens').select('perfil').where({
-            estabelecimento: email,
-            perfil: true
-        })
-        if (imagens.length > 0) {
-            await connection('imagens').where({
+            // primeiro ver se já nao tem imagem de perfil
+            const imagens = await connection('imagens').select('perfil').where({
                 estabelecimento: email,
                 perfil: true
-            }).del()
-        }
-        // inserir no banco de dados
+            })
+            if (imagens.length > 0) {
+                await connection('imagens').where({
+                    estabelecimento: email,
+                    perfil: true
+                }).del()
+            }
+            // inserir no banco de dados
 
-        //const binaryFile = await fileConverter.base64_encode(newName)
-        await connection('imagens').insert({
-            perfil: true,
-            imagem: file,
-            estabelecimento: email
-        })
+            //const binaryFile = await fileConverter.base64_encode(newName)
+            await connection('imagens').insert({
+                perfil: true,
+                imagem: file,
+                estabelecimento: email
+            })
 
-        // excluir imagem
-        //fs.unlinkSync(`${firstpath}${newName}`)
+            // excluir imagem
+            //fs.unlinkSync(`${firstpath}${newName}`)
 
-        response.send()
+            response.send()
 
         } catch (error) {
-         console.log(error)
-         return response.status(401).send({ error: 'Tente novamente.' })   
+            console.log(error)
+            return response.status(401).send({ error: 'Tente novamente.' })
         }
-        
+
         /*
                 const email = request.estEmail
                 // DEFINIR A IMAGEM DE PERFIL
@@ -323,7 +341,7 @@ module.exports = {
     // DEVE TER UMA FUNÇÃO/ROTA SÓ PARA INSERIR E PARA DELETAR IMAGENS
     async adicionarFotos(request, response) {
         const email = request.estEmail
-        const {file, name} = request.body
+        const { file, name } = request.body
         // verificar se é mesmo uma imagem
         const partsImage = name.split('.')
         if (partsImage[1] !== 'jpg' && partsImage[1] !== 'png') {
@@ -335,7 +353,7 @@ module.exports = {
             imagem: file,
             estabelecimento: email
         })
-        
+
         response.send()
 
     },

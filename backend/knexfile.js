@@ -20,10 +20,11 @@ module.exports = {
  development: {
   client: 'mysql',
   connection: {
-    host:'mysql669.umbler.com:41890',
-    user:'mrdine',
-    password:'ninja123',
-    database:'supermoondb'
+    host: process.env.HOST,
+    port: process.env.PORT,
+    user: process.env.USER,
+    password: process.env.PSW,
+    database: process.env.DATABASE
   },
   migrations: {
     directory: './src/database/migrations'

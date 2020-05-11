@@ -82,7 +82,8 @@ module.exports = {
 
                         for(let i = 0; i < ests.length; i++) {
                             let imagemPerfil = await connection('imagens').select('imagem').where({estabelecimento: ests[i].email, perfil: true}).first()
-                            ests[i].imagem = imagemPerfil.imagem
+                            ests[i].imagem = await new Buffer.from(imagemPerfil.imagem).toString();
+                            
                         }
                         
                         return response.send(ests)
