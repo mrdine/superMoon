@@ -35,7 +35,6 @@ module.exports = {
         })
 
         estabelecimento.myImages = fotos
-        console.log(fotos)
 
         estabelecimento.myPerfilImage = await connection('imagens')
             .select('imagem')
@@ -104,7 +103,6 @@ module.exports = {
         })
 
         estabelecimento.myImages = fotos
-        console.log(fotos)
 
         estabelecimento.myPerfilImage = await connection('imagens')
             .select('imagem')
@@ -187,7 +185,6 @@ module.exports = {
 
             response.send()
         } catch (error) {
-            console.log(error)
             return response.status(401).json({ error: 'Insira os dados corretamente' }) // 401: Não autorizado
         }
     },
